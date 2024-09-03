@@ -1,0 +1,7 @@
+Flask
+Flask-Cors
+openai
+requests
+PyPDF2
+mysql-connector-python
+python-dotenv
