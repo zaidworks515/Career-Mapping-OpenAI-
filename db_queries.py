@@ -36,7 +36,10 @@ def store_roadmap_in_db(path_id, roadmap_json):
     connection = create_connection()
     if connection:
         cursor = connection.cursor()
-
+        
+        cursor.execute("DELETE FROM skills WHERE step_id IN (SELECT id FROM steps WHERE path_id = %s)", (path_id,))
+        cursor.execute("DELETE FROM steps WHERE path_id = %s", (path_id,))
+        
         def insert_step(path_id, title, description, sort):
             cursor.execute('''
                 INSERT INTO steps (path_id, title, description, sort, status)
