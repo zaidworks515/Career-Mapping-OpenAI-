@@ -4,15 +4,18 @@ import openai
 import requests
 import PyPDF2
 import json
-from db_queries import check_prompt_file_db, store_roadmap_in_db, path_status
+from jwt import decode, ExpiredSignatureError, InvalidTokenError
 from concurrent.futures import ThreadPoolExecutor
 import logging
-from config import cv_path, port
+from db_queries import check_prompt_file_db, store_roadmap_in_db, path_status
+from config import cv_path, port, openapi_key ,key
 
 app = Flask(__name__)
 CORS(app)
 
-openai.api_key = "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"
+secret_key = key
+
+openai.api_key = openapi_key
 
 executor = ThreadPoolExecutor(max_workers=10)  
 
@@ -195,6 +198,21 @@ def process_regenerate_roadmap(id, model):
 @app.route('/generate_roadmap', methods=['POST'])
 def generate_roadmap():
     try:
+        auth_header = request.headers.get('Authorization')
+        
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({'error': 'Authorization required'}), 400
+        
+        token = auth_header.split(' ')[1]
+        
+        try:
+            decoded_token = decode(token, secret_key, algorithms=["HS256"])
+        except ExpiredSignatureError:
+            return jsonify({'error': 'Token has expired'}), 401
+        except InvalidTokenError:
+            return jsonify({'error': 'Invalid token'}), 401
+        
+        
         id = request.args.get('id')
         if not id:
             return jsonify({'error': 'ID is required'}), 400
@@ -212,6 +230,21 @@ def generate_roadmap():
 @app.route('/regenerate_roadmap', methods=['POST'])
 def regenerate_roadmap():
     try:
+        auth_header = request.headers.get('Authorization')
+                
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({'error': 'Authorization required'}), 400
+        
+        token = auth_header.split(' ')[1]
+        
+        try:
+            decoded_token = decode(token, secret_key, algorithms=["HS256"])
+        except ExpiredSignatureError:
+            return jsonify({'error': 'Token has expired'}), 401
+        except InvalidTokenError:
+            return jsonify({'error': 'Invalid token'}), 401
+        
+        
         id = request.args.get('id')
         if not id:
             return jsonify({'error': 'ID is required'}), 400
