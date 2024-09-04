@@ -1,13 +1,14 @@
 import mysql.connector
 from mysql.connector import Error
+from config import host, user, password, database
 
 def create_connection():
     try:
         connection = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='',
-            database='career_map'
+            host=host,
+            user=user,
+            password=password,
+            database=database
         )
         if connection.is_connected():
             print("Connected to MySQL database")

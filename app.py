@@ -17,7 +17,7 @@ secret_key = key
 
 openai.api_key = openapi_key
 
-executor = ThreadPoolExecutor(max_workers=10)  
+executor = ThreadPoolExecutor(max_workers=15)  
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
