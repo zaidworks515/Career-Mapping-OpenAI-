@@ -7,7 +7,7 @@ import json
 from jwt import decode, ExpiredSignatureError, InvalidTokenError
 from concurrent.futures import ThreadPoolExecutor
 import logging
-from db_queries import check_prompt_file_db, store_roadmap_in_db, path_status_analyzed, path_status_analying
+from db_queries import check_prompt_file_db, store_roadmap_in_db, path_status_analyzed, path_status_analyzing
 from config import cv_path, port, openapi_key ,key
 
 app = Flask(__name__)
@@ -220,7 +220,7 @@ def generate_roadmap():
         if not id:
             return jsonify({'error': 'ID is required'}), 400
         
-        path_status_analying(id)
+        path_status_analyzing(id)
         response_message = f"Analyzing Starts Successfully"
         model = "gpt-4"
         executor.submit(process_roadmap, id, model)  
@@ -253,7 +253,7 @@ def regenerate_roadmap():
         if not id:
             return jsonify({'error': 'ID is required'}), 400
 
-        path_status_analying(id)
+        path_status_analyzing(id)
         response_message = f"Analyzing Starts Successfully"
         model = "gpt-4o"
         executor.submit(process_regenerate_roadmap, id, model)  

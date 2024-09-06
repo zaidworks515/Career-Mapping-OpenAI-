@@ -99,7 +99,7 @@ def path_status_analyzed(id):
             connection.close()  
 
 
-def path_status_analying(id):
+def path_status_analyzing(id):
     connection = create_connection()
     if connection:
         try:
