@@ -7,7 +7,7 @@ import json
 from jwt import decode, ExpiredSignatureError, InvalidTokenError
 from concurrent.futures import ThreadPoolExecutor
 import logging
-from db_queries import check_prompt_file_db, store_roadmap_in_db, path_status
+from db_queries import check_prompt_file_db, store_roadmap_in_db, path_status_analyzed, path_status_analying
 from config import cv_path, port, openapi_key ,key
 
 app = Flask(__name__)
@@ -34,10 +34,12 @@ def single_prompt(prompt, model, temperature=0.7):
             },
             json={
                 "model": model,
-                "messages": [{
+                "messages": [
+                    {"role": "system", "content": "You are an experienced career advisor with a deep understanding of career development paths. Provide detailed and structured career roadmaps based on the user's input."},
+                    {
                     "role": "user",
                     "content": (
-                        f"""As an experienced career advisor, analyze the following prompt and Create the best suitable career roadmap.
+                        f"""Analyze the following prompt and Create a career roadmap with all possible routes and multiple goals.
                         prompt: {prompt}."""
                         " Output should be in JSON format with unique keys for each step:"
                         """{
@@ -45,10 +47,11 @@ def single_prompt(prompt, model, temperature=0.7):
                             "step1": {"title": "Junior Developer", "description": "General description of the job", "key_skills": ["Skill 1", "Skill 2"]},
                             "step2": {"title": "Next Step Title", "description": "General description of the job", "key_skills": ["Skill 1", "Skill 2"]},
                             "optional_step1": {"title": "Optional Path Title", "description": "General description of the job", "key_skills": ["Skill 1", "Skill 2"]}
+                            "goal1": {"title": "name of the position", "description": "General description of the job", "key_skills": ["Skill 1", "Skill 2"]}
                           }
                         }
 
-                        Start with current position and end with goal and explore all Optional steps and they can be placed between main steps if necessary. Ensure the final step is labeled as the 'goal' instead of 'step' which will come last in the data and number of skills required should be = 5."""
+                        Start with current position state and end with multiple goals and explore all Optional steps and they can be placed between main steps if necessary. Ensure the final step is labeled as the 'goal{n}' instead of 'step' which will come last in the data and number of skills required should be = 5."""
                     )
                 }],
                 "temperature": temperature
@@ -145,7 +148,7 @@ def process_roadmap(id, model):
 
 
             store_roadmap_in_db(path_id=id, roadmap_json=response_dict)  # Save to DB
-            path_status(id)
+            path_status_analyzed(id)
             logger.info(f"Roadmap generated and saved for ID: {id}")
         else:
             logger.error(f"Failed to generate roadmap for ID: {id}")
@@ -185,7 +188,7 @@ def process_regenerate_roadmap(id, model):
 
 
             store_roadmap_in_db(path_id=id, roadmap_json=response_dict)  # Save to DB
-            path_status(id)
+            path_status_analyzed(id)
             logger.info(f"Roadmap regenerated and saved for ID: {id}")
         else:
             logger.error(f"Failed to regenerate roadmap for ID: {id}")
@@ -216,15 +219,16 @@ def generate_roadmap():
         id = request.args.get('id')
         if not id:
             return jsonify({'error': 'ID is required'}), 400
-
+        
+        path_status_analying(id)
         response_message = f"Analyzing Starts Successfully"
         model = "gpt-4"
         executor.submit(process_roadmap, id, model)  
-        return jsonify({'status': response_message}), 200
+        return jsonify({'status': 'TRUE', 'message': response_message}), 200
 
     except Exception as e:
         logger.error(f"Error in generate_roadmap: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'status': 'FALSE'}), 500
     
     
 @app.route('/regenerate_roadmap', methods=['POST'])
@@ -249,14 +253,15 @@ def regenerate_roadmap():
         if not id:
             return jsonify({'error': 'ID is required'}), 400
 
+        path_status_analying(id)
         response_message = f"Analyzing Starts Successfully"
         model = "gpt-4o"
         executor.submit(process_regenerate_roadmap, id, model)  
-        return jsonify({'status': response_message}), 200
+        return jsonify({'status': 'TRUE', 'message': response_message}), 200
 
     except Exception as e:
         logger.error(f"Error in regenerate_roadmap: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'status': 'FALSE'}), 500
 
 
 if __name__ == "__main__":

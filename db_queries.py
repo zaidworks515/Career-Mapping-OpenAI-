@@ -79,7 +79,7 @@ def store_roadmap_in_db(path_id, roadmap_json):
         connection.close()
         
 
-def path_status(id):
+def path_status_analyzed(id):
     connection = create_connection()
     if connection:
         try:
@@ -87,6 +87,26 @@ def path_status(id):
             cursor.execute('''
                 UPDATE path
                 SET status = 'analyzed'
+                WHERE id = %s
+            ''', (id,))
+            connection.commit()  
+            return cursor.rowcount  
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            connection.rollback()  
+        finally:
+            cursor.close()
+            connection.close()  
+
+
+def path_status_analying(id):
+    connection = create_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            cursor.execute('''
+                UPDATE path
+                SET status = 'analyzing'
                 WHERE id = %s
             ''', (id,))
             connection.commit()  
