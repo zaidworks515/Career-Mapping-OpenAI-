@@ -118,12 +118,10 @@ def process_roadmap(id, model):
         prompt = None
         cv = None
 
-        if prompt_file_data[0] is None and prompt_file_data[1] is not None:
-            cv = f"{cv_path}/{prompt_file_data[1]}"
-        elif prompt_file_data[0] is not None:
+        if prompt_file_data[0]:
             prompt = prompt_file_data[0]
-        elif prompt_file_data[1] is not None:
-            prompt = prompt_file_data[1]
+        else:
+            cv = f"{cv_path}/{prompt_file_data[1]}"
 
         if cv:
             resume_text = extract_text_from_pdf(cv)
