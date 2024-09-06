@@ -224,11 +224,11 @@ def generate_roadmap():
         response_message = f"Analyzing Starts Successfully"
         model = "gpt-4"
         executor.submit(process_roadmap, id, model)  
-        return jsonify({'status': 'TRUE', 'message': response_message}), 200
+        return jsonify({'status': True, 'message': response_message}), 200
 
     except Exception as e:
         logger.error(f"Error in generate_roadmap: {str(e)}")
-        return jsonify({'status': 'FALSE'}), 500
+        return jsonify({'status': False}), 500
     
     
 @app.route('/regenerate_roadmap', methods=['POST'])
@@ -257,11 +257,11 @@ def regenerate_roadmap():
         response_message = f"Analyzing Starts Successfully"
         model = "gpt-4o"
         executor.submit(process_regenerate_roadmap, id, model)  
-        return jsonify({'status': 'TRUE', 'message': response_message}), 200
+        return jsonify({'status': True, 'message': response_message}), 200
 
     except Exception as e:
         logger.error(f"Error in regenerate_roadmap: {str(e)}")
-        return jsonify({'status': 'FALSE'}), 500
+        return jsonify({'status': False}), 500
 
 
 if __name__ == "__main__":
