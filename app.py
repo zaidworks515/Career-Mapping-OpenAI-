@@ -1,3 +1,4 @@
+import re
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import openai
@@ -110,6 +111,26 @@ def road_map_cv(resume_text, model, temperature= 0.7):
         return None
     
 
+    
+    
+def extract_json_from_content(content):
+    try:
+        start_idx = content.find('{')
+        end_idx = content.rfind('}') + 1
+        
+        if start_idx == -1 or end_idx == -1:
+            return None  # If No JSON block found
+
+        json_str = content[start_idx:end_idx].strip()
+        
+        return json.loads(json_str)
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding JSON from content: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Error extracting JSON from content: {e}")
+        return None
+
 
 def process_roadmap(id, model):
     try:
@@ -125,35 +146,35 @@ def process_roadmap(id, model):
 
         if cv:
             resume_text = extract_text_from_pdf(cv)
-            model = model
             result = road_map_cv(resume_text, model)
         elif prompt_file_data:
-            if prompt_file_data[0] is not None:
-                prompt = prompt_file_data[0]
-            else:
-                prompt = prompt_file_data[1]
-
-            model = model
+            prompt = prompt_file_data[0] if prompt_file_data[0] else prompt_file_data[1]
             result = single_prompt(prompt, model)
         else:
-            message = logger.error(f"No valid CV or prompt found for ID: {id}")
-            return message
+            logger.error(f"No valid CV or prompt found for ID: {id}")
+            return "No valid CV or prompt found"
 
         if result:
             content = result['choices'][0]['message']['content']
-            response_formatted = content.strip('```json\n').strip()
-            response_dict = json.loads(response_formatted)
+            logger.debug(f"API response content: {content}")
+            
+            response_formatted = extract_json_from_content(content)
 
-
-            store_roadmap_in_db(path_id=id, roadmap_json=response_dict)  # Save to DB
-            path_status_analyzed(id)
-            logger.info(f"Roadmap generated and saved for ID: {id}")
-        else:
-            logger.error(f"Failed to generate roadmap for ID: {id}")
+            if response_formatted:
+                try:
+                    store_roadmap_in_db(path_id=id, roadmap_json=response_formatted)  # Save to DB
+                    logger.info(f"Output saved successfully to db against path_id = {id}.")
+                    path_status_analyzed(id)
+                    logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")
+                except Exception as e:
+                    logger.error(f"Error saving JSON to file or database: {str(e)}")
+            else:
+                logger.error("No valid JSON block found in the content.")
 
     except Exception as e:
         logger.error(f"Error in process_roadmap for ID {id}: {str(e)}")
-
+        
+                
 
 def process_regenerate_roadmap(id, model):
     try:
@@ -162,12 +183,10 @@ def process_regenerate_roadmap(id, model):
         prompt = None
         cv = None
 
-        if prompt_file_data[0] is None and prompt_file_data[1] is not None:
-            cv = f"{cv_path}/{prompt_file_data[1]}"
-        elif prompt_file_data[0] is not None:
+        if prompt_file_data[0]:
             prompt = prompt_file_data[0]
-        elif prompt_file_data[1] is not None:
-            prompt = prompt_file_data[1]
+        else:
+            cv = f"{cv_path}/{prompt_file_data[1]}"
 
         if cv:
             resume_text = extract_text_from_pdf(cv)
@@ -181,19 +200,24 @@ def process_regenerate_roadmap(id, model):
 
         if result:
             content = result['choices'][0]['message']['content']
-            response_formatted = content.strip('```json\n').strip()
-            response_dict = json.loads(response_formatted)
+            logger.debug(f"API response content: {content}")
+            
+            response_formatted = extract_json_from_content(content)
 
-
-            store_roadmap_in_db(path_id=id, roadmap_json=response_dict)  # Save to DB
-            path_status_analyzed(id)
-            logger.info(f"Roadmap regenerated and saved for ID: {id}")
-        else:
-            logger.error(f"Failed to regenerate roadmap for ID: {id}")
+            if response_formatted:
+                try:
+                    store_roadmap_in_db(path_id=id, roadmap_json=response_formatted)  # Save to DB
+                    logger.info(f"Output saved successfully to db against path_id = {id}.")
+                    path_status_analyzed(id)
+                    logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")
+                except Exception as e:
+                    logger.error(f"Error saving JSON to file or database: {str(e)}")
+            else:
+                logger.error("No valid JSON block found in the content.")
 
     except Exception as e:
-        logger.error(f"Error in process_regenerate_roadmap for ID {id}: {str(e)}")
-    
+        logger.error(f"Error in process_roadmap for ID {id}: {str(e)}")
+        
     
     
 @app.route('/generate_roadmap', methods=['POST'])
