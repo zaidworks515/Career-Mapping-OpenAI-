@@ -9,7 +9,7 @@ from jwt import decode, ExpiredSignatureError, InvalidTokenError
 from concurrent.futures import ThreadPoolExecutor
 import logging
 from db_queries import check_prompt_file_db, store_roadmap_in_db, path_status_analyzed, path_status_analyzing
-from config import cv_path, port, openapi_key ,key
+from config import cv_path, port, openapi_key, key
 
 app = Flask(__name__)
 CORS(app)
@@ -36,25 +36,91 @@ def single_prompt(prompt, model, temperature=0.7):
             json={
                 "model": model,
                 "messages": [
-                    {"role": "system", "content": "You are an experienced career advisor with a deep understanding of career development paths. Provide detailed and structured career roadmaps based on the user's input."},
+                    {"role": "system", "content": "You are an experienced career advisor with a deep understanding of career development paths. Provide detailed and structured career roadmaps with multiple paths and goals based on the user's input."},
                     {
-                    "role": "user",
-                    "content": (
-                        f"""Analyze the following prompt and Create a career roadmap with all possible routes and multiple goals.
-                        prompt: {prompt}."""
-                        " Output should be in JSON format with unique keys for each step:"
-                        """{
-                          "roadmap": {
-                            "step1": {"title": "Junior Developer", "description": "General description of the job", "key_skills": ["Skill 1", "Skill 2"]},
-                            "step2": {"title": "Next Step Title", "description": "General description of the job", "key_skills": ["Skill 1", "Skill 2"]},
-                            "optional_step1": {"title": "Optional Path Title", "description": "General description of the job", "key_skills": ["Skill 1", "Skill 2"]}
-                            "goal1": {"title": "name of the position", "description": "General description of the job", "key_skills": ["Skill 1", "Skill 2"]}
-                          }
-                        }
+                        "role": "user",
+                        "content": (
+                            f"""Create an in depth detailed career roadmap with multiple branches, steps, and goals from the following prompt. Include branches, optional steps, and sub-branches as needed.
 
-                        Start with current position state and end with multiple goals and explore all Optional steps and they can be placed between main steps if necessary. Ensure the final step is labeled as the 'goal{n}' instead of 'step' which will come last in the data and number of skills required should be = 5."""
-                    )
-                }],
+                            Prompt: {prompt}
+
+                            Structure the output in JSON as follows:
+
+                            {{
+                              "roadmap": {{
+                                "branch_{{branch_number}}": {{
+                                  "step_{{step_number}}": {{
+                                    "title": "Job Title",
+                                    "description": "Job description",
+                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                  }},
+                                  "optional_step_{{optional_step_number}}": {{
+                                    "title": "Job Title",
+                                    "description": "Job description",
+                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                  }},
+                                  "sub_branch_{{sub_branch_number}}": {{
+                                    "step_{{sub_step_number}}": {{
+                                      "title": "Sub-branch Job Title",
+                                      "description": "Sub-branch job description",
+                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                    }},
+                                    "optional_step_{{sub_optional_step_number}}": {{
+                                      "title": "Job Title",
+                                      "description": "Job description",
+                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                    }},
+                                    "goal_{{sub_goal_number}}": {{
+                                      "title": "Final Sub-branch Goal",
+                                      "description": "Sub-branch goal description",
+                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                    }}
+                                  }},
+                                  "goal_{{branch_goal_number}}": {{
+                                    "title": "Final Branch Goal",
+                                    "description": "Branch goal description",
+                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                  }}
+                                }},
+                                "branch_{{branch_number}}": {{
+                                  "step_{{step_number}}": {{
+                                    "title": "Job Title",
+                                    "description": "Job description",
+                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
+                                  }},
+                                  "optional_step_{{optional_step_number}}": {{
+                                    "title": "Job Title",
+                                    "description": "Job description",
+                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
+                                  }},
+                                  "sub_branch_{{sub_branch_number}}": {{
+                                    "step_{{sub_step_number}}": {{
+                                      "title": "Sub-branch Job Title",
+                                      "description": "Sub-branch job description",
+                                      "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
+                                    }},
+                                    "goal_{{sub_goal_number}}": {{
+                                      "title": "Final Sub-branch Goal",
+                                      "description": "Sub-branch goal description",
+                                      "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
+                                    }}
+                                  }},
+                                  "goal_{{branch_goal_number}}": {{
+                                    "title": "Final Branch Goal",
+                                    "description": "Branch goal description",
+                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
+                                  }}
+                                }}
+                              }}
+                            }}
+
+                            - Ensure each branch and sub-branch has unique steps and skills, and a final goal.
+                            - Include optional steps and alternate paths as relevant.
+                            - Avoid repeating steps or goals.
+                            """
+                        )
+                    }
+                ],
                 "temperature": temperature
             }
         )
@@ -67,16 +133,21 @@ def single_prompt(prompt, model, temperature=0.7):
 
 
 def extract_text_from_pdf(pdf_path):
-    try:
-        with open(pdf_path, 'rb') as file:
-            reader = PyPDF2.PdfReader(file)
-            text = ""
-            for page in reader.pages:
-                text += page.extract_text()
-        return text
-    except Exception as e:
-        logger.error(f"Error in extract_text_from_pdf: {str(e)}")
-        return ""
+    text = ""
+    
+    with open(pdf_path, 'rb') as file:
+        reader = PyPDF2.PdfReader(file)
+        for page in reader.pages:
+            text += page.extract_text() or ''  
+    
+    text = re.sub(r'\s+', ' ', text)  
+    
+    text = re.sub(r'[^\x00-\x7F]+', '', text)  
+    text = text.strip()
+
+    return text
+
+
 
 def road_map_cv(resume_text, model, temperature= 0.7):
     try:
@@ -88,19 +159,92 @@ def road_map_cv(resume_text, model, temperature= 0.7):
             },
             json={
                 "model": model,
-                "messages": [{
-                    "role": "user",
-                    "content": "As an experienced career advisor, Analyze the following resume and create a career roadmap in JSON format, including optional career paths. Resume text: " + resume_text + """
-                    Output should be in JSON format with unique keys for each step:
+                "messages": [
+                    {"role": "system", "content": "You are an experienced career advisor with a deep understanding of career development paths. Provide detailed and structured career roadmaps with multiple paths and goals based on the user's input."},
                     {
-                      "roadmap": {
-                        "step1": {"title": "Junior Developer", "description": "General description of the job", "key_skills": ["Skill 1", "Skill 2"]},
-                        "step2": {"title": "Next Step Title", "description": "General description of the job", "key_skills": ["Skill 1", "Skill 2"]},
-                        "optional_step1": {"title": "Optional Path Title", "description": "General description of the job", "key_skills": ["Skill 1", "Skill 2"]}
-                      }
+                        "role": "user",
+                        "content": (
+                            f"""Create an in depth detailed career roadmap with multiple branches, steps, and goals from the following extracted resume text. Include branches, optional steps, and sub-branches as needed.
+
+                            Resume Text: {resume_text}
+
+                            Structure the output in JSON as follows:
+
+                            {{
+                              "roadmap": {{
+                                "branch_{{branch_number}}": {{
+                                  "step_{{step_number}}": {{
+                                    "title": "Job Title",
+                                    "description": "Job description",
+                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                  }},
+                                  "optional_step_{{optional_step_number}}": {{
+                                    "title": "Job Title",
+                                    "description": "Job description",
+                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                  }},
+                                  "sub_branch_{{sub_branch_number}}": {{
+                                    "step_{{sub_step_number}}": {{
+                                      "title": "Sub-branch Job Title",
+                                      "description": "Sub-branch job description",
+                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                    }},
+                                    "optional_step_{{sub_optional_step_number}}": {{
+                                      "title": "Job Title",
+                                      "description": "Job description",
+                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                    }},
+                                    "goal_{{sub_goal_number}}": {{
+                                      "title": "Final Sub-branch Goal",
+                                      "description": "Sub-branch goal description",
+                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                    }}
+                                  }},
+                                  "goal_{{branch_goal_number}}": {{
+                                    "title": "Final Branch Goal",
+                                    "description": "Branch goal description",
+                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                  }}
+                                }},
+                                "branch_{{branch_number}}": {{
+                                  "step_{{step_number}}": {{
+                                    "title": "Job Title",
+                                    "description": "Job description",
+                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
+                                  }},
+                                  "optional_step_{{optional_step_number}}": {{
+                                    "title": "Job Title",
+                                    "description": "Job description",
+                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
+                                  }},
+                                  "sub_branch_{{sub_branch_number}}": {{
+                                    "step_{{sub_step_number}}": {{
+                                      "title": "Sub-branch Job Title",
+                                      "description": "Sub-branch job description",
+                                      "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
+                                    }},
+                                    "goal_{{sub_goal_number}}": {{
+                                      "title": "Final Sub-branch Goal",
+                                      "description": "Sub-branch goal description",
+                                      "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
+                                    }}
+                                  }},
+                                  "goal_{{branch_goal_number}}": {{
+                                    "title": "Final Branch Goal",
+                                    "description": "Branch goal description",
+                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
+                                  }}
+                                }}
+                              }}
+                            }}
+
+                            - Ensure each branch and sub-branch has unique steps and skills, and a final goal.
+                            - Include optional steps and alternate paths as relevant.
+                            - Avoid repeating steps or goals.
+                            """
+                        )
                     }
-                    Start with current position and end with goal and explore all Optional steps and they can be placed between main steps if necessary. Ensure the final step is labeled as the 'goal' instead of 'step' which will come last in the data and number of skills required should be >=5."""
-                }],
+                    ],
                 "temperature": temperature
             }
         ) 
@@ -163,6 +307,20 @@ def process_roadmap(id, model):
             if response_formatted:
                 try:
                     store_roadmap_in_db(path_id=id, roadmap_json=response_formatted)  # Save to DB
+                    
+                    """ REMOVE THIS AFTER INCLUDING DB QUERIES """
+                    
+                    file_path = 'response.json'
+
+                    with open(file_path, 'w') as json_file:
+                        json.dump(response_formatted, json_file, indent=4)
+
+                    print(f"Data successfully saved to {file_path}")
+                    
+                    
+                    
+                    
+                    
                     logger.info(f"Output saved successfully to db against path_id = {id}.")
                     path_status_analyzed(id)
                     logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")

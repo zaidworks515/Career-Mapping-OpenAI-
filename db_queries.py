@@ -31,53 +31,82 @@ def check_prompt_file_db(id):
     return None
 
 
+def insert_step(cursor, path_id, branch_no, title, description, is_optional, is_sub_branch, is_goal):
+    insert_query = """
+    INSERT INTO steps2 (path_id, branch_no, title, description, is_optional, is_sub_branch, is_goal)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
+    """
+    cursor.execute(insert_query, (path_id, branch_no, title, description, is_optional, is_sub_branch, is_goal))
+    return cursor.lastrowid  # Return the auto-generated step ID
+
+def insert_skill(cursor, step_id, skill):
+    insert_query = """
+    INSERT INTO skills2 (step_id, skills)
+    VALUES (%s, %s)
+    """
+    cursor.execute(insert_query, (step_id, skill))
+
+
+def process_steps(cursor, path_id, branch_no, steps, is_sub_branch=False):
+    for step_key, step_data in steps.items():
+        # Check if the step is optional or a goal
+        is_optional = 'optional' in step_key
+        is_goal = 'goal' in step_key
+        
+        # Ensure the step has a "title" and "description" key before proceeding
+        title = step_data.get("title", "Unknown Title")  # Default to "Unknown Title" if missing
+        description = step_data.get("description", "No description")  # Default to "No description" if missing
+
+        # Insert step data into steps2 table
+        step_id = insert_step(
+            cursor, 
+            path_id, 
+            branch_no, 
+            title, 
+            description, 
+            is_optional, 
+            is_sub_branch, 
+            is_goal
+        )
+
+        # Insert skills data into skills2 table if key_skills are available
+        key_skills = step_data.get("key_skills", [])
+        for skill in key_skills:
+            insert_skill(cursor, step_id, skill)
+
+        # Check if the key starts with "sub_branch" to handle sub-branches
+        if step_key.startswith("sub_branch"):
+            process_steps(cursor, path_id, branch_no, step_data, is_sub_branch=True)
+
 
 def store_roadmap_in_db(path_id, roadmap_json):
     connection = create_connection()
     if connection:
-        cursor = connection.cursor()
-        
-        cursor.execute("DELETE FROM skills WHERE step_id IN (SELECT id FROM steps WHERE path_id = %s)", (path_id,))
-        cursor.execute("DELETE FROM steps WHERE path_id = %s", (path_id,))
-        
-        def insert_step(path_id, title, description, sort):
-            cursor.execute('''
-                INSERT INTO steps (path_id, title, description, sort, status)
-                VALUES (%s, %s, %s, %s, 'pending')
-            ''', (path_id, title, description, sort))
-            return cursor.lastrowid
+        try:
+            cursor = connection.cursor()
 
-        def insert_skill(step_id, skill_title, sort):
-            cursor.execute('''
-                INSERT INTO skills (step_id, title, sort, status)
-                VALUES (%s, %s, %s, 'pending')
-            ''', (step_id, skill_title, sort))
+            # Iterate through each branch in the roadmap JSON
+            for branch_key, branch_data in roadmap_json["roadmap"].items():
+                # Extract the branch number from the key (e.g., branch_1 -> 1)
+                branch_no = int(branch_key.split("_")[1])
 
-        sort_step = 1
-        last_main_step_sort = 1
+                # Process all steps within the branch
+                process_steps(cursor, path_id, branch_no, branch_data)
 
-        for step_key, step_data in roadmap_json['roadmap'].items():
-            title = step_data.get('title', 'No Title')
-            description = step_data.get('description', '')
+            # Commit the transaction
+            connection.commit()
+            print("Roadmap data inserted successfully.")
 
-            if 'optional_' in step_key:
-                sort = last_main_step_sort
-            else:
-                sort = sort_step
-                last_main_step_sort = sort_step
-                sort_step += 1
+        except Error as e:
+            print(f"Error: {e}")
+            connection.rollback()
+        finally:
+            cursor.close()
+            connection.close()
 
-            step_id = insert_step(path_id, title, description, sort)
 
-            sort_skill = 1
-            for skill in step_data.get('key_skills', []):
-                insert_skill(step_id, skill, sort_skill)
-                sort_skill += 1
 
-        connection.commit()
-        cursor.close()
-        connection.close()
-        
+                            
 
 def path_status_analyzed(id):
     connection = create_connection()
@@ -117,6 +146,8 @@ def path_status_analyzing(id):
         finally:
             cursor.close()
             connection.close()  
+
+
 
 
 
@@ -172,20 +203,26 @@ def path_status_analyzing(id):
 
 
 # def reset_table(table_name):
-#     connection = create_connection()
-#     if connection:
-#         cursor = connection.cursor()
-    
-#         cursor.execute(f'''
-#         DELETE FROM {table_name}
-#         ''')
+#     try:
+#         connection = create_connection()
+#         if connection:
+#             cursor = connection.cursor()
+            
+#             cursor.execute('SET FOREIGN_KEY_CHECKS = 0')
+            
+#             cursor.execute(f'DELETE FROM {table_name}')
+            
+#             cursor.execute('SET FOREIGN_KEY_CHECKS = 1')
+            
+#             connection.commit()
+#             print(f'Table {table_name} has been reset.')
+#     except Exception as e:
+#         print(f'An error occurred while resetting the table {table_name}: {e}')
+#     finally:
+#         if connection:
+#             connection.close()
 
-#         connection.commit()
-#         connection.close()
-
-
-# reset_table('steps')
-# reset_table('skills')
-
+# reset_table('steps2')
+# reset_table('skills2')
 
 # print('DONE')
