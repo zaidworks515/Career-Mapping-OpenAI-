@@ -308,16 +308,14 @@ def process_roadmap(id, model):
                 try:
                     store_roadmap_in_db(path_id=id, roadmap_json=response_formatted)  # Save to DB
                     
-                    """ REMOVE THIS AFTER INCLUDING DB QUERIES """
+                    # """ REMOVE THIS AFTER INCLUDING DB QUERIES """
                     
-                    file_path = 'response.json'
+                    # file_path = 'response.json'
 
-                    with open(file_path, 'w') as json_file:
-                        json.dump(response_formatted, json_file, indent=4)
+                    # with open(file_path, 'w') as json_file:
+                    #     json.dump(response_formatted, json_file, indent=4)
 
-                    print(f"Data successfully saved to {file_path}")
-                    
-                    
+                    # print(f"Data successfully saved to {file_path}")
                     
                     
                     
