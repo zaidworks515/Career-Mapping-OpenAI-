@@ -36,87 +36,82 @@ def single_prompt(prompt, model, temperature=0.7):
             json={
                 "model": model,
                 "messages": [
-                    {"role": "system", "content": "You are an experienced career advisor with a deep understanding of career development paths. Provide detailed and structured career roadmaps with multiple paths and goals based on the user's input."},
+                    {"role": "system", "content": "You are an experienced career advisor with a deep understanding of career development paths. Provide detailed and structured career roadmaps with multiple paths, branches, and goals based on the user's input."},
                     {
                         "role": "user",
                         "content": (
-                            f"""Create an in depth detailed career roadmap with multiple branches, steps, and goals from the following prompt. Include branches, optional steps, and sub-branches as needed.
+                            f"""Create an in-depth career roadmap with multiple branches, steps, and goals from the following prompt. Include different paths (managerial, technical, exploratory) with unique colors, steps, and goals as specified.
 
                             Prompt: {prompt}
-
                             Structure the output in JSON as follows:
-
                             {{
                               "roadmap": {{
-                                "branch_{{branch_number}}": {{
-                                  "step_{{step_number}}": {{
-                                    "title": "Job Title",
-                                    "description": "Job description",
-                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
-                                  }},
-                                  "optional_step_{{optional_step_number}}": {{
-                                    "title": "Job Title",
-                                    "description": "Job description",
-                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
-                                  }},
-                                  "sub_branch_{{sub_branch_number}}": {{
-                                    "step_{{sub_step_number}}": {{
-                                      "title": "Sub-branch Job Title",
-                                      "description": "Sub-branch job description",
-                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
-                                    }},
-                                    "optional_step_{{sub_optional_step_number}}": {{
-                                      "title": "Job Title",
-                                      "description": "Job description",
-                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
-                                    }},
-                                    "goal_{{sub_goal_number}}": {{
-                                      "title": "Final Sub-branch Goal",
-                                      "description": "Sub-branch goal description",
-                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                "branch": {{
+                                  "color": "black",  # Main path (current path toward the goal)
+                                  "steps": [
+                                    {{
+                                      "title": "Title",
+                                      "description": "General Description of this position",
+                                      "skills": [
+                                        {{ "title": "Skill name" }}  
+                                        # Add more skills as needed (5 or more)
+                                      ],
+                                      # Must add more intermediary steps for detailing.
+                                      "branches": [  # Sub-branches inside this step
+                                        {{
+                                          "color": "green",  # Default path (user's interest outside their industry)
+                                          "steps": [
+                                            {{
+                                              "title": "Title",
+                                              "description": "General Description of this position",
+                                              "skills": [
+                                                {{ "title": "Skill name" }}
+                                                # Add more skills as needed (5 or more)
+                                              ]
+                                            }}
+                                            # Must add more steps for detailing.
+                                          ]
+                                        }},
+                                        {{
+                                          "color": "purple",  # Managerial path
+                                          "steps": [
+                                            {{
+                                              "title": "Title",
+                                              "description": "General Description of this position",
+                                              "skills": [
+                                                {{ "title": "Skill name" }}
+                                                # Add more skills as needed (5 or more)
+                                              ]
+                                            }}
+                                            # Must add more steps for detailing.
+                                          ]
+                                        }},
+                                        {{
+                                          "color": "blue",  # Technical path
+                                          "steps": [
+                                            {{
+                                              "title": "Title",
+                                              "description": "General Description of this position",
+                                              "skills": [
+                                                {{ "title": "Skill name" }}
+                                                # Add more skills as needed (5 or more)
+                                              ]
+                                            }}
+                                            # Must add more steps for detailing.
+                                          ]
+                                        }}
+                                      ]
                                     }}
-                                  }},
-                                  "goal_{{branch_goal_number}}": {{
-                                    "title": "Final Branch Goal",
-                                    "description": "Branch goal description",
-                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
-                                  }}
-                                }},
-                                "branch_{{branch_number}}": {{
-                                  "step_{{step_number}}": {{
-                                    "title": "Job Title",
-                                    "description": "Job description",
-                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
-                                  }},
-                                  "optional_step_{{optional_step_number}}": {{
-                                    "title": "Job Title",
-                                    "description": "Job description",
-                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
-                                  }},
-                                  "sub_branch_{{sub_branch_number}}": {{
-                                    "step_{{sub_step_number}}": {{
-                                      "title": "Sub-branch Job Title",
-                                      "description": "Sub-branch job description",
-                                      "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
-                                    }},
-                                    "goal_{{sub_goal_number}}": {{
-                                      "title": "Final Sub-branch Goal",
-                                      "description": "Sub-branch goal description",
-                                      "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
-                                    }}
-                                  }},
-                                  "goal_{{branch_goal_number}}": {{
-                                    "title": "Final Branch Goal",
-                                    "description": "Branch goal description",
-                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
-                                  }}
+                                  ]
                                 }}
                               }}
                             }}
-
-                            - Ensure each branch and sub-branch has unique steps and skills, and a final goal.
-                            - Include optional steps and alternate paths as relevant.
-                            - Avoid repeating steps or goals.
+                            - Start with the current state.
+                            - Ensure the career map is detailed, in-depth, and extensive.
+                            - Clearly separate paths by color: main path (black), default path (green), managerial path (purple), and technical path (blue). Each color should be used once.
+                            - Include optional steps and sub-branches for flexibility.
+                            - Ensure that each step contains 5 or more unique skills.
+                            - The last step of each branch represents reaching the goal of respective branch.
                             """
                         )
                     }
@@ -167,80 +162,75 @@ def road_map_cv(resume_text, model, temperature= 0.7):
                             f"""Create an in depth detailed career roadmap with multiple branches, steps, and goals from the following extracted resume text. Include branches, optional steps, and sub-branches as needed.
 
                             Resume Text: {resume_text}
-
                             Structure the output in JSON as follows:
-
                             {{
                               "roadmap": {{
-                                "branch_{{branch_number}}": {{
-                                  "step_{{step_number}}": {{
-                                    "title": "Job Title",
-                                    "description": "Job description",
-                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
-                                  }},
-                                  "optional_step_{{optional_step_number}}": {{
-                                    "title": "Job Title",
-                                    "description": "Job description",
-                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
-                                  }},
-                                  "sub_branch_{{sub_branch_number}}": {{
-                                    "step_{{sub_step_number}}": {{
-                                      "title": "Sub-branch Job Title",
-                                      "description": "Sub-branch job description",
-                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
-                                    }},
-                                    "optional_step_{{sub_optional_step_number}}": {{
-                                      "title": "Job Title",
-                                      "description": "Job description",
-                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
-                                    }},
-                                    "goal_{{sub_goal_number}}": {{
-                                      "title": "Final Sub-branch Goal",
-                                      "description": "Sub-branch goal description",
-                                      "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
+                                "branch": {{
+                                  "color": "black",  # Main path (current path toward the goal)
+                                  "steps": [
+                                    {{
+                                      "title": "Title",
+                                      "description": "General Description of this position",
+                                      "skills": [
+                                        {{ "title": "Skill name" }}  
+                                        # Add more skills as needed (5 or more)
+                                      ],
+                                      # Must add more intermediary steps for detailing.
+                                      "branches": [  # Sub-branches inside this step
+                                        {{
+                                          "color": "green",  # Default path (user's interest outside their industry)
+                                          "steps": [
+                                            {{
+                                              "title": "Title",
+                                              "description": "General Description of this position",
+                                              "skills": [
+                                                {{ "title": "Skill name" }}
+                                                # Add more skills as needed (5 or more)
+                                              ]
+                                            }}
+                                            # Must add more steps for detailing.
+                                          ]
+                                        }},
+                                        {{
+                                          "color": "purple",  # Managerial path
+                                          "steps": [
+                                            {{
+                                              "title": "Title",
+                                              "description": "General Description of this position",
+                                              "skills": [
+                                                {{ "title": "Skill name" }}
+                                                # Add more skills as needed (5 or more)
+                                              ]
+                                            }}
+                                            # Must add more steps for detailing.
+                                          ]
+                                        }},
+                                        {{
+                                          "color": "blue",  # Technical path
+                                          "steps": [
+                                            {{
+                                              "title": "Title",
+                                              "description": "General Description of this position",
+                                              "skills": [
+                                                {{ "title": "Skill name" }}
+                                                # Add more skills as needed (5 or more)
+                                              ]
+                                            }}
+                                            # Must add more steps for detailing.
+                                          ]
+                                        }}
+                                      ]
                                     }}
-                                  }},
-                                  "goal_{{branch_goal_number}}": {{
-                                    "title": "Final Branch Goal",
-                                    "description": "Branch goal description",
-                                    "key_skills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"]
-                                  }}
-                                }},
-                                "branch_{{branch_number}}": {{
-                                  "step_{{step_number}}": {{
-                                    "title": "Job Title",
-                                    "description": "Job description",
-                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
-                                  }},
-                                  "optional_step_{{optional_step_number}}": {{
-                                    "title": "Job Title",
-                                    "description": "Job description",
-                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
-                                  }},
-                                  "sub_branch_{{sub_branch_number}}": {{
-                                    "step_{{sub_step_number}}": {{
-                                      "title": "Sub-branch Job Title",
-                                      "description": "Sub-branch job description",
-                                      "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
-                                    }},
-                                    "goal_{{sub_goal_number}}": {{
-                                      "title": "Final Sub-branch Goal",
-                                      "description": "Sub-branch goal description",
-                                      "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
-                                    }}
-                                  }},
-                                  "goal_{{branch_goal_number}}": {{
-                                    "title": "Final Branch Goal",
-                                    "description": "Branch goal description",
-                                    "key_skills": ["Skill A", "Skill B", "Skill C", "Skill D", "Skill E"]
-                                  }}
+                                  ]
                                 }}
                               }}
                             }}
-
-                            - Ensure each branch and sub-branch has unique steps and skills, and a final goal.
-                            - Include optional steps and alternate paths as relevant.
-                            - Avoid repeating steps or goals.
+                            - Start with the current state.
+                            - Ensure the career map is detailed, in-depth, and extensive.
+                            - Clearly separate paths by color: main path (black), default path (green), managerial path (purple), and technical path (blue). Each color should be used once.
+                            - Include optional steps and sub-branches for flexibility.
+                            - Ensure that each step contains 5 or more unique skills.
+                            - The last step of each branch represents reaching the goal of respective branch.
                             """
                         )
                     }
