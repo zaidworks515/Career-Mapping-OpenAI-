@@ -135,10 +135,30 @@ def path_status_analyzing(id):
             connection.rollback()  
         finally:
             cursor.close()
-            connection.close()  
+            connection.close()
+            
+            
+def path_status_pending(id):
+    connection = create_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            cursor.execute('''
+                UPDATE path
+                SET status = 'pending'
+                WHERE id = %s
+            ''', (id,))
+            connection.commit()  
+            return cursor.rowcount  
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            connection.rollback()  
+        finally:
+            cursor.close()
+            connection.close()
 
-
-           
+# path_status_pending(3)
+# path_status_analyzing(3)
 
 
 """ ============================== TABLE RESET QUERIES ==================================="""

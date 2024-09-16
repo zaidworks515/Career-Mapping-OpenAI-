@@ -8,7 +8,7 @@ import json
 from jwt import decode, ExpiredSignatureError, InvalidTokenError
 from concurrent.futures import ThreadPoolExecutor
 import logging
-from db_queries import check_prompt_file_db, store_roadmap_in_db, path_status_analyzed, path_status_analyzing
+from db_queries import check_prompt_file_db, path_status_analyzed, path_status_analyzing, path_status_pending
 from config import cv_path, port, openapi_key, key
 from test import DataBase
 
@@ -322,6 +322,7 @@ def process_roadmap(id, model):
 
     except Exception as e:
         logger.error(f"Error in process_roadmap for ID {id}: {str(e)}")
+        path_status_pending(id)
         
                 
 
@@ -367,6 +368,7 @@ def process_regenerate_roadmap(id, model):
 
     except Exception as e:
         logger.error(f"Error in process_roadmap for ID {id}: {str(e)}")
+        path_status_pending(id)
         
     
     
