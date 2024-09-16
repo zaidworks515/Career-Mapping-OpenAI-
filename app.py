@@ -10,10 +10,12 @@ from concurrent.futures import ThreadPoolExecutor
 import logging
 from db_queries import check_prompt_file_db, store_roadmap_in_db, path_status_analyzed, path_status_analyzing
 from config import cv_path, port, openapi_key, key
+from test import DataBase
 
 app = Flask(__name__)
 CORS(app)
 
+db = DataBase()
 secret_key = key
 
 openai.api_key = openapi_key
@@ -296,7 +298,8 @@ def process_roadmap(id, model):
 
             if response_formatted:
                 try:
-                    store_roadmap_in_db(path_id=id, roadmap_json=response_formatted)  # Save to DB
+                    # store_roadmap_in_db(path_id=id, roadmap_json=response_formatted)  # Save to DB
+                    db.insert_road_map(response_formatted, id)
                     
                     # """ REMOVE THIS AFTER INCLUDING DB QUERIES """
                     
@@ -352,7 +355,8 @@ def process_regenerate_roadmap(id, model):
 
             if response_formatted:
                 try:
-                    store_roadmap_in_db(path_id=id, roadmap_json=response_formatted)  # Save to DB
+                    # store_roadmap_in_db(path_id=id, roadmap_json=response_formatted)  # Save to DB
+                    db.insert_road_map(response_formatted, id)
                     logger.info(f"Output saved successfully to db against path_id = {id}.")
                     path_status_analyzed(id)
                     logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")
