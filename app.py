@@ -302,8 +302,8 @@ def extract_json_from_content(content):
         logger.error(f"Error extracting JSON from content: {e}")
         return None
       
-def send_notification (token):
-    URL = f"{node_server_url}/create-path-analyse-notifications"
+def send_notification (token,id):
+    URL = f"{node_server_url}/create-path-analyse-notifications/{id}"
     headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -361,7 +361,7 @@ def process_roadmap(id, model, token):
                     logger.info(f"Output saved successfully to db against path_id = {id}.")
                     path_status_analyzed(id)
                     logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")
-                    send_notification(token)
+                    send_notification(token,id)
                     
                 except Exception as e:
                     logger.error(f"Error saving JSON to file or database: {str(e)}")
@@ -409,7 +409,7 @@ def process_regenerate_roadmap(id, model,token):
                     logger.info(f"Output saved successfully to db against path_id = {id}.")
                     path_status_analyzed(id)
                     logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")
-                    send_notification(token)
+                    send_notification(token,id)
                 except Exception as e:
                     logger.error(f"Error saving JSON to file or database: {str(e)}")
             else:
