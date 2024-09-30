@@ -9,8 +9,9 @@ from jwt import decode, ExpiredSignatureError, InvalidTokenError
 from concurrent.futures import ThreadPoolExecutor
 import logging
 from db_queries import check_prompt_file_db, path_status_analyzed, path_status_analyzing, path_status_pending
-from config import cv_path, port, openapi_key, key
+from config import cv_path, port, openapi_key, key, node_server_url
 from test import DataBase
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -300,9 +301,18 @@ def extract_json_from_content(content):
     except Exception as e:
         logger.error(f"Error extracting JSON from content: {e}")
         return None
+      
+def send_notification (token):
+    URL = f"${node_server_url}/create-path-analyse-notifications"
+    headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': f"Bearer ${token}"
+    }
+    requests.get(url=URL,headers=headers)
 
 
-def process_roadmap(id, model):
+def process_roadmap(id, model, token):
     try:
         prompt_file_data = check_prompt_file_db(id)
 
@@ -351,6 +361,8 @@ def process_roadmap(id, model):
                     logger.info(f"Output saved successfully to db against path_id = {id}.")
                     path_status_analyzed(id)
                     logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")
+                    send_notification(token)
+                    
                 except Exception as e:
                     logger.error(f"Error saving JSON to file or database: {str(e)}")
             else:
@@ -362,7 +374,7 @@ def process_roadmap(id, model):
         
                 
 
-def process_regenerate_roadmap(id, model):
+def process_regenerate_roadmap(id, model,token):
     try:
         prompt_file_data = check_prompt_file_db(id)
 
@@ -397,6 +409,7 @@ def process_regenerate_roadmap(id, model):
                     logger.info(f"Output saved successfully to db against path_id = {id}.")
                     path_status_analyzed(id)
                     logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")
+                    send_notification(token)
                 except Exception as e:
                     logger.error(f"Error saving JSON to file or database: {str(e)}")
             else:
@@ -433,7 +446,7 @@ def generate_roadmap():
         path_status_analyzing(id)
         response_message = f"Analyzing Starts Successfully"
         model = "gpt-4"
-        executor.submit(process_roadmap, id, model)  
+        executor.submit(process_roadmap, id, model,token)  
         return jsonify({'status': True, 'message': response_message}), 200
 
     except Exception as e:
@@ -466,7 +479,7 @@ def regenerate_roadmap():
         path_status_analyzing(id)
         response_message = f"Analyzing Starts Successfully"
         model = "gpt-4o"
-        executor.submit(process_regenerate_roadmap, id, model)  
+        executor.submit(process_regenerate_roadmap, id, model,token)  
         return jsonify({'status': True, 'message': response_message}), 200
 
     except Exception as e:

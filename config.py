@@ -6,6 +6,7 @@ cv_path = os.getenv('CV_PATH')
 port = os.getenv('PORT')
 key = os.getenv('KEY')
 openapi_key = os.getenv('OPENAPI')
+node_server_url = os.getenv('NodeServerURL')
 
 host = os.getenv('HOST')
 user = os.getenv('USER')
