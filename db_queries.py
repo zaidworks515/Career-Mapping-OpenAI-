@@ -105,7 +105,7 @@ def path_status_analyzed(id):
             cursor = connection.cursor()
             cursor.execute('''
                 UPDATE path
-                SET status = 'analyzed'
+                SET status = 'analysed'
                 WHERE id = %s
             ''', (id,))
             connection.commit()  
@@ -125,7 +125,7 @@ def path_status_analyzing(id):
             cursor = connection.cursor()
             cursor.execute('''
                 UPDATE path
-                SET status = 'analyzing'
+                SET status = 'analysing'
                 WHERE id = %s
             ''', (id,))
             connection.commit()  
