@@ -309,7 +309,7 @@ def send_notification (token,id):
       'Content-Type': 'application/json',
       'Authorization': f"Bearer {token}"
     }
-    requests.get(url=URL,headers=headers)
+    requests.post(url=URL,headers=headers)
 
 
 def process_roadmap(id, model, token):
