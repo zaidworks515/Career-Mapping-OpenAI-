@@ -303,11 +303,11 @@ def extract_json_from_content(content):
         return None
       
 def send_notification (token):
-    URL = f"${node_server_url}/create-path-analyse-notifications"
+    URL = f"{node_server_url}/create-path-analyse-notifications"
     headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': f"Bearer ${token}"
+      'Authorization': f"Bearer {token}"
     }
     requests.get(url=URL,headers=headers)
 
