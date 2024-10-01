@@ -303,19 +303,19 @@ def extract_json_from_content(content):
         return None
       
 def send_notification (token,id):
+    print(node_server_url)
     URL = f"{node_server_url}/create-path-analyse-notifications/{id}"
     headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': f"Bearer {token}"
     }
-    logger.debug(URL)
     req = requests.post(url=URL,headers=headers)
     if req.status_code == 200:
       data = json.loads(req.json)
-      logger.debug(data['message'])
+      print(data['message'])
     else:
-      logger.debug("Send Notification Request Failed")
+      print("Send Notification Request Failed")
       
 
 
