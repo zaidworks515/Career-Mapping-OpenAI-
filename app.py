@@ -309,16 +309,13 @@ def send_notification (token,id):
       'Content-Type': 'application/json',
       'Authorization': f"Bearer {token}"
     }
-    try:
-      logger.debug(URL)
-      req = requests.post(url=URL,headers=headers)
-      if req.status_code:
-        data = json.loads(req.json)
-        logger.debug(data['message'])
-      else:
-        logger.debug("Send Notification Request Failed")
-    except Exception as e:
-      logger.debug(e)
+    logger.debug(URL)
+    req = requests.post(url=URL,headers=headers)
+    if req.status_code == 200:
+      data = json.loads(req.json)
+      logger.debug(data['message'])
+    else:
+      logger.debug("Send Notification Request Failed")
       
 
 
