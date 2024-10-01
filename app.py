@@ -365,8 +365,10 @@ def process_roadmap(id, model, token):
                     
                 except Exception as e:
                     logger.error(f"Error saving JSON to file or database: {str(e)}")
+                    path_status_pending(id)
             else:
                 logger.error("No valid JSON block found in the content.")
+                path_status_pending(id)
 
     except Exception as e:
         logger.error(f"Error in process_roadmap for ID {id}: {str(e)}")
@@ -412,8 +414,10 @@ def process_regenerate_roadmap(id, model,token):
                     send_notification(token,id)
                 except Exception as e:
                     logger.error(f"Error saving JSON to file or database: {str(e)}")
+                    path_status_pending(id)
             else:
                 logger.error("No valid JSON block found in the content.")
+                path_status_pending(id)
 
     except Exception as e:
         logger.error(f"Error in process_roadmap for ID {id}: {str(e)}")
