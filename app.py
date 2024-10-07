@@ -48,14 +48,14 @@ def single_prompt(prompt, model, temperature=0.6):
             "role": "user",
             "content": (
                 f"""Create an in-depth career roadmap with multiple branches, steps, and goals from the following prompt. 
-                Include different paths (managerial, technical, exploratory) with unique colors while keeping the main path in consistency combined towards the end goal. The steps array must have a minimum of 8 steps, with at least 5 steps dedicated to the black path (current path), and additional objects in the steps array for the remaining paths.
+                Include different paths (managerial, technical, exploratory) with unique colors while keeping the main path in consistency combined towards the end goal. The steps array must have a minimum of 8 steps, with at least 5 steps dedicated to the #f4b084 path (current path), and additional objects in the steps array for the remaining paths.
 
                 Prompt: {prompt}
                 Structure the output in JSON as follows:
                 {{
                   "roadmap": {{
                     "branch": {{
-                      "color": "black",  # Main path (current path toward the goal)
+                      "color": "#f4b084",  # Main path (current path toward the goal)
                       "steps": [
                         {{
                           "title": "Title for the first step",
@@ -66,7 +66,7 @@ def single_prompt(prompt, model, temperature=0.6):
                           ],
                           "branches": [  # Sub-branches for career exploration
                             {{
-                              "color": "green",  # Exploratory path
+                              "color": "#a9d08e",  # Exploratory path
                               "steps": [
                                 {{
                                   "title": "Exploratory Step Title",
@@ -80,7 +80,7 @@ def single_prompt(prompt, model, temperature=0.6):
                               ]
                             }},
                             {{
-                              "color": "purple",  # Managerial path
+                              "color": "#ccccff",  # Managerial path
                               "steps": [
                                 {{
                                   "title": "Managerial Step Title",
@@ -94,7 +94,7 @@ def single_prompt(prompt, model, temperature=0.6):
                               ]
                             }},
                             {{
-                              "color": "blue",  # Technical path
+                              "color": "#9bc2e6",  # Technical path
                               "steps": [
                                 {{
                                   "title": "Technical Step Title",
@@ -109,7 +109,7 @@ def single_prompt(prompt, model, temperature=0.6):
                             }}
                           ]
                         }},
-                        # Add at least 4 or more steps for the main black path here
+                        # Add at least 4 or more steps for the main #f4b084 path here
                         {{
                           "title": "Title ",
                           "description": "Description of the job",
@@ -124,7 +124,7 @@ def single_prompt(prompt, model, temperature=0.6):
                 }}
                 - Start with the current state.
                 - Provide a detailed, in-depth career roadmap exploring all possible paths and each branch other than current one will reach to it's highest possible position whether it aligns with the user objective or not.
-                - Separate paths by color: main path (black), default (green), managerial (purple), technical (blue).
+                - Separate paths by color: main path (#f4b084), default (#a9d08e), managerial (#ccccff), technical (#9bc2e6).
                 - Each branch must contain at least 5+ steps and sub-branches.
                 - Ensure each step contains 5+ unique skills.
                 - The last step represents reaching the goal of the respective branch.
@@ -184,14 +184,18 @@ def road_map_cv(resume_text, model, temperature= 0.6):
             "role": "user",
             "content": (
                 f"""Create an in-depth career roadmap with multiple branches, steps, and goals from the following text extracted from Resume/CV. 
+<<<<<<< HEAD
                 Include different paths (managerial, technical, exploratory) with unique colors while keeping the main path in consistency combined towards the end goal. The steps array must have a minimum of 8 steps, with at least 5 steps dedicated to the black path (current path), and additional objects in the steps array for the remaining paths.
+=======
+                Include different paths (managerial, technical, exploratory) with unique colors while keeping the main path in consistency combined towards the end goal. The steps array must have a minimum of 8 steps, with at least 5 steps dedicated to the #f4b084 path (current path), and additional objects in the steps array for the remaining paths.
+>>>>>>> 1a56f7095d6228b67aba6ac96eb87f582ede20eb
 
                 Resume Text: {resume_text}
                 Structure the output in JSON as follows:
                 {{
                   "roadmap": {{
                     "branch": {{
-                      "color": "black",  # Main path (current path toward the goal)
+                      "color": "#f4b084",  # Main path (current path toward the goal)
                       "steps": [
                         {{
                           "title": "Title for the first step",
@@ -202,7 +206,7 @@ def road_map_cv(resume_text, model, temperature= 0.6):
                           ],
                           "branches": [  # Sub-branches for career exploration
                             {{
-                              "color": "green",  # Exploratory path
+                              "color": "#a9d08e",  # Exploratory path
                               "steps": [
                                 {{
                                   "title": "Exploratory Step Title",
@@ -216,7 +220,7 @@ def road_map_cv(resume_text, model, temperature= 0.6):
                               ]
                             }},
                             {{
-                              "color": "purple",  # Managerial path
+                              "color": "#ccccff",  # Managerial path
                               "steps": [
                                 {{
                                   "title": "Managerial Step Title",
@@ -230,7 +234,7 @@ def road_map_cv(resume_text, model, temperature= 0.6):
                               ]
                             }},
                             {{
-                              "color": "blue",  # Technical path
+                              "color": "#9bc2e6",  # Technical path
                               "steps": [
                                 {{
                                   "title": "Technical Step Title",
@@ -245,7 +249,7 @@ def road_map_cv(resume_text, model, temperature= 0.6):
                             }}
                           ]
                         }},
-                        # Add at least 4 or more steps for the main black path here
+                        # Add at least 4 or more steps for the main #f4b084 path here
                         {{
                           "title": "Title ",
                           "description": "Description of the job",
@@ -260,7 +264,7 @@ def road_map_cv(resume_text, model, temperature= 0.6):
                 }}
                 - Start with the current state.
                 - Provide a detailed, in-depth career roadmap exploring all possible paths and each branch other than current one will reach to it's highest possible position whether it aligns with the user objective or not.
-                - Separate paths by color: main path (black), default (green), managerial (purple), technical (blue).
+                - Separate paths by color: main path (#f4b084), default (#a9d08e), managerial (#ccccff), technical (#9bc2e6).
                 - Each branch must contain at least 5+ steps and sub-branches.
                 - Ensure each step contains 5+ unique skills.
                 - The last step represents reaching the goal of the respective branch.
@@ -364,7 +368,11 @@ def process_roadmap(id, model, token):
                         logger.info(f"Output saved successfully to db against path_id = {id}.")
                         path_status_analyzed(id)
                         logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")
+<<<<<<< HEAD
                         send_notification(token, id)
+=======
+                        # send_notification(token, id)
+>>>>>>> 1a56f7095d6228b67aba6ac96eb87f582ede20eb
                         break  
 
                     except Exception as e:
@@ -539,3 +547,8 @@ if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', threaded=True, port=port)
   except Exception as e:
     print(f"An error occurred: {str(e)}")
+<<<<<<< HEAD
+=======
+
+#z
+>>>>>>> 1a56f7095d6228b67aba6ac96eb87f582ede20eb
