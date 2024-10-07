@@ -184,11 +184,7 @@ def road_map_cv(resume_text, model, temperature= 0.6):
             "role": "user",
             "content": (
                 f"""Create an in-depth career roadmap with multiple branches, steps, and goals from the following text extracted from Resume/CV. 
-<<<<<<< HEAD
                 Include different paths (managerial, technical, exploratory) with unique colors while keeping the main path in consistency combined towards the end goal. The steps array must have a minimum of 8 steps, with at least 5 steps dedicated to the black path (current path), and additional objects in the steps array for the remaining paths.
-=======
-                Include different paths (managerial, technical, exploratory) with unique colors while keeping the main path in consistency combined towards the end goal. The steps array must have a minimum of 8 steps, with at least 5 steps dedicated to the #f4b084 path (current path), and additional objects in the steps array for the remaining paths.
->>>>>>> 1a56f7095d6228b67aba6ac96eb87f582ede20eb
 
                 Resume Text: {resume_text}
                 Structure the output in JSON as follows:
@@ -368,11 +364,7 @@ def process_roadmap(id, model, token):
                         logger.info(f"Output saved successfully to db against path_id = {id}.")
                         path_status_analyzed(id)
                         logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")
-<<<<<<< HEAD
                         send_notification(token, id)
-=======
-                        # send_notification(token, id)
->>>>>>> 1a56f7095d6228b67aba6ac96eb87f582ede20eb
                         break  
 
                     except Exception as e:
@@ -547,8 +539,3 @@ if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', threaded=True, port=port)
   except Exception as e:
     print(f"An error occurred: {str(e)}")
-<<<<<<< HEAD
-=======
-
-#z
->>>>>>> 1a56f7095d6228b67aba6ac96eb87f582ede20eb
