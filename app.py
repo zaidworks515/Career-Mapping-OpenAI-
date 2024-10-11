@@ -375,7 +375,7 @@ def process_roadmap(id, model, token):
                         logger.info(f"Output saved successfully to db against path_id = {id}.")
                         path_status_analyzed(id)
                         logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")
-                        # send_notification(token, id)
+                        send_notification(token, id)
                         break  
 
                     except Exception as e:
@@ -465,7 +465,7 @@ def process_regenerate_roadmap(id, model, token):
                 logger.info(f"Output saved successfully to db against path_id = {id}.")
                 path_status_analyzed(id)
                 logger.info(f"Status Changed to 'analyzed' against path_id = {id}.")
-                # send_notification(token, id)
+                send_notification(token, id)
 
             except Exception as e:
                 logger.error(f"Error saving JSON to file or database: {str(e)}")
@@ -550,5 +550,3 @@ if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', threaded=True, port=port)
   except Exception as e:
     print(f"An error occurred: {str(e)}")
-
-#z

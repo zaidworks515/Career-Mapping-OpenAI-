@@ -4,11 +4,11 @@
             "color": "black",
             "steps": [
                 {
-                    "title": "JavaScript Developer",
-                    "description": "Your current role, focusing on JavaScript development.",
+                    "title": "Javascript Developer",
+                    "description": "Current position working with Javascript for web development",
                     "skills": [
                         {
-                            "title": "JavaScript"
+                            "title": "Javascript"
                         },
                         {
                             "title": "HTML"
@@ -17,10 +17,13 @@
                             "title": "CSS"
                         },
                         {
-                            "title": "Responsive Web Design"
+                            "title": "Git"
                         },
                         {
-                            "title": "Testing and Debugging"
+                            "title": "React"
+                        },
+                        {
+                            "title": "Node.js"
                         }
                     ],
                     "branches": [
@@ -28,86 +31,65 @@
                             "color": "green",
                             "steps": [
                                 {
-                                    "title": "Front-End Developer",
-                                    "description": "Focuses on user interface and user experience.",
+                                    "title": "Software Engineer",
+                                    "description": "Developing and maintaining software systems",
                                     "skills": [
                                         {
-                                            "title": "HTML"
+                                            "title": "Data Structures"
                                         },
                                         {
-                                            "title": "CSS"
+                                            "title": "Algorithms"
                                         },
                                         {
-                                            "title": "JavaScript"
+                                            "title": "Java"
                                         },
                                         {
-                                            "title": "React"
+                                            "title": "C++"
                                         },
                                         {
-                                            "title": "Version Control/Git"
+                                            "title": "Python"
                                         }
                                     ]
                                 },
                                 {
-                                    "title": "UX Designer",
-                                    "description": "Focuses on optimizing user experience through design.",
+                                    "title": "Senior Software Engineer",
+                                    "description": "Designing software systems and leading projects",
                                     "skills": [
                                         {
-                                            "title": "Wireframing"
+                                            "title": "System Design"
                                         },
                                         {
-                                            "title": "Prototyping"
-                                        },
-                                        {
-                                            "title": "User Research"
-                                        },
-                                        {
-                                            "title": "Collaboration"
-                                        },
-                                        {
-                                            "title": "Visual Communication"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "title": "Product Manager",
-                                    "description": "Oversees the development and marketing of products.",
-                                    "skills": [
-                                        {
-                                            "title": "Product Lifecycle Management"
+                                            "title": "Project Management"
                                         },
                                         {
                                             "title": "Leadership"
                                         },
                                         {
-                                            "title": "Marketing"
+                                            "title": "Debugging"
                                         },
                                         {
-                                            "title": "Data Analysis"
-                                        },
-                                        {
-                                            "title": "Strategic Planning"
+                                            "title": "Problem-solving"
                                         }
                                     ]
                                 },
                                 {
-                                    "title": "Director of Product",
-                                    "description": "Directs product strategy and development.",
+                                    "title": "Software Architect",
+                                    "description": "Creating high-level design choices and dictating technical standards",
                                     "skills": [
                                         {
-                                            "title": "Leadership"
+                                            "title": "System Architecture"
                                         },
                                         {
-                                            "title": "Strategic Thinking"
+                                            "title": "Technical Leadership"
                                         },
                                         {
                                             "title": "Communication"
                                         },
                                         {
-                                            "title": "Decision Making"
+                                            "title": "Business Knowledge"
                                         },
                                         {
-                                            "title": "Product Lifecycle Management"
+                                            "title": "Critical Thinking"
                                         }
                                     ]
                                 }
@@ -117,83 +99,62 @@
                             "color": "purple",
                             "steps": [
                                 {
-                                    "title": "Team Lead",
-                                    "description": "Leads a team of developers.",
+                                    "title": "Project Manager",
+                                    "description": "Managing software development projects",
                                     "skills": [
                                         {
-                                            "title": "Leadership"
-                                        },
-                                        {
-                                            "title": "JavaScript"
-                                        },
-                                        {
-                                            "title": "Code Review"
-                                        },
-                                        {
-                                            "title": "Project Management"
-                                        },
-                                        {
-                                            "title": "Agile Methodologies"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "title": "Technical Project Manager",
-                                    "description": "Manages technical projects.",
-                                    "skills": [
-                                        {
-                                            "title": "Project Management"
-                                        },
-                                        {
-                                            "title": "Communication"
+                                            "title": "Project Planning"
                                         },
                                         {
                                             "title": "Risk Management"
                                         },
                                         {
-                                            "title": "Technical Understanding"
+                                            "title": "Budgeting"
                                         },
                                         {
-                                            "title": "Problem Solving"
+                                            "title": "Quality Control"
+                                        },
+                                        {
+                                            "title": "Leadership"
                                         }
                                     ]
                                 },
                                 {
-                                    "title": "Director of Engineering",
-                                    "description": "Oversees all engineering departments.",
+                                    "title": "Program Manager",
+                                    "description": "Managing multiple related projects",
                                     "skills": [
                                         {
-                                            "title": "Leadership"
+                                            "title": "Program Management"
                                         },
                                         {
                                             "title": "Strategic Planning"
                                         },
                                         {
-                                            "title": "Engineering Management"
+                                            "title": "Stakeholder Management"
                                         },
                                         {
-                                            "title": "Business Acumen"
+                                            "title": "Resource Allocation"
                                         },
                                         {
-                                            "title": "Communication"
+                                            "title": "Conflict Resolution"
                                         }
                                     ]
                                 },
                                 {
-                                    "title": "Chief Technology Officer (CTO)",
-                                    "description": "Directs the company's technical strategy and development.",
+                                    "title": "CTO (Chief Technical Officer)",
+                                    "description": "Overseeing all technical aspects and technological resources of an organization",
                                     "skills": [
                                         {
-                                            "title": "Strategic Thinking"
+                                            "title": "Technical Vision"
                                         },
                                         {
-                                            "title": "Leadership"
+                                            "title": "Business Strategy"
                                         },
                                         {
-                                            "title": "Technology Trend Awareness"
+                                            "title": "Team Leadership"
                                         },
                                         {
-                                            "title": "Business Acumen"
+                                            "title": "Technology Evaluation"
                                         },
                                         {
                                             "title": "Decision Making"
@@ -206,86 +167,86 @@
                             "color": "blue",
                             "steps": [
                                 {
-                                    "title": "Full Stack Developer",
-                                    "description": "Works on both front-end and back-end development.",
+                                    "title": "Backend Developer",
+                                    "description": "Working with servers, databases, and application logic",
                                     "skills": [
                                         {
-                                            "title": "JavaScript"
+                                            "title": "Node.js"
                                         },
                                         {
-                                            "title": "HTML"
+                                            "title": "Express.js"
                                         },
                                         {
-                                            "title": "CSS"
+                                            "title": "SQL"
                                         },
                                         {
-                                            "title": "Backend Language (Node.js, Python, etc.)"
+                                            "title": "MongoDB"
                                         },
                                         {
-                                            "title": "Database Management"
+                                            "title": "RESTful APIs"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "title": "Full Stack Developer",
+                                    "description": "Working with both front-end and back-end of web development",
+                                    "skills": [
+                                        {
+                                            "title": "React.js"
+                                        },
+                                        {
+                                            "title": "Node.js"
+                                        },
+                                        {
+                                            "title": "Express.js"
+                                        },
+                                        {
+                                            "title": "MongoDB"
+                                        },
+                                        {
+                                            "title": "Full Stack Web Development"
                                         }
                                     ]
                                 },
                                 {
                                     "title": "Senior Full Stack Developer",
-                                    "description": "Senior level full stack development role.",
+                                    "description": "Leading full stack development projects and teams",
                                     "skills": [
-                                        {
-                                            "title": "Advanced JavaScript"
-                                        },
-                                        {
-                                            "title": "Performance Testing"
-                                        },
-                                        {
-                                            "title": "Security and Data Protection"
-                                        },
-                                        {
-                                            "title": "Code Review"
-                                        },
                                         {
                                             "title": "Team Leadership"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "title": "Software Architect",
-                                    "description": "Designs software systems and solutions.",
-                                    "skills": [
-                                        {
-                                            "title": "System Design"
-                                        },
-                                        {
-                                            "title": "Problem Solving"
                                         },
                                         {
                                             "title": "Project Management"
                                         },
                                         {
-                                            "title": "Advanced Coding Skills"
+                                            "title": "System Design"
                                         },
                                         {
-                                            "title": "Software Testing and Debugging"
+                                            "title": "Performance Testing"
+                                        },
+                                        {
+                                            "title": "Code Review"
                                         }
                                     ]
                                 },
                                 {
-                                    "title": "Chief Software Architect",
-                                    "description": "Oversees the software architecture of the company.",
+                                    "title": "Full Stack Architect",
+                                    "description": "Designing full stack applications and setting development standards",
                                     "skills": [
                                         {
-                                            "title": "Leadership"
+                                            "title": "System Architecture"
                                         },
                                         {
-                                            "title": "Strategic Thinking"
+                                            "title": "Design Patterns"
                                         },
                                         {
-                                            "title": "Software Architecture"
+                                            "title": "Microservices"
                                         },
                                         {
-                                            "title": "Problem Solving"
+                                            "title": "Database Design"
                                         },
                                         {
-                                            "title": "Communication"
+                                            "title": "Security Principles"
                                         }
                                     ]
                                 }
@@ -294,8 +255,8 @@
                     ]
                 },
                 {
-                    "title": "Front-End Developer",
-                    "description": "Expanded role with a focus on front-end development.",
+                    "title": "Frontend Developer",
+                    "description": "Working with UI/UX elements and front-end technologies",
                     "skills": [
                         {
                             "title": "HTML"
@@ -304,44 +265,44 @@
                             "title": "CSS"
                         },
                         {
-                            "title": "JavaScript"
+                            "title": "Javascript"
                         },
                         {
                             "title": "React"
                         },
                         {
-                            "title": "Version Control/Git"
+                            "title": "Vue.js"
+                        },
+                        {
+                            "title": "Angular.js"
                         }
                     ]
                 },
                 {
-                    "title": "Back-End Developer",
-                    "description": "Expanded role with a focus on back-end development.",
+                    "title": "Backend Developer",
+                    "description": "Working with server-side logic and databases",
                     "skills": [
-                        {
-                            "title": "JavaScript"
-                        },
                         {
                             "title": "Node.js"
                         },
                         {
-                            "title": "Databases"
+                            "title": "Express.js"
                         },
                         {
-                            "title": "Server-Side Programming"
+                            "title": "SQL"
                         },
                         {
-                            "title": "API Integration"
+                            "title": "MongoDB"
+                        },
+                        {
+                            "title": "RESTful APIs"
                         }
                     ]
                 },
                 {
                     "title": "Full Stack Developer",
-                    "description": "Role encompasses both front-end and back-end development.",
+                    "description": "Working across the full stack of web development",
                     "skills": [
-                        {
-                            "title": "JavaScript"
-                        },
                         {
                             "title": "HTML"
                         },
@@ -349,55 +310,64 @@
                             "title": "CSS"
                         },
                         {
-                            "title": "Backend Language (Node.js, Python, etc.)"
+                            "title": "Javascript"
                         },
                         {
-                            "title": "Database Management"
+                            "title": "React"
+                        },
+                        {
+                            "title": "Node.js"
+                        },
+                        {
+                            "title": "Express.js"
+                        },
+                        {
+                            "title": "MongoDB"
+                        },
+                        {
+                            "title": "RESTful APIs"
                         }
                     ]
                 },
                 {
                     "title": "Senior Full Stack Developer",
-                    "description": "Senior level full stack development role.",
+                    "description": "Leading full stack development projects and teams",
                     "skills": [
                         {
-                            "title": "Advanced JavaScript"
+                            "title": "Team Leadership"
+                        },
+                        {
+                            "title": "Project Management"
+                        },
+                        {
+                            "title": "System Design"
                         },
                         {
                             "title": "Performance Testing"
                         },
                         {
-                            "title": "Security and Data Protection"
-                        },
-                        {
                             "title": "Code Review"
-                        },
-                        {
-                            "title": "Team Leadership"
                         }
                     ]
                 },
                 {
-                    "title": "Full Stack Team Lead",
-                    "description": "Leads a team of Full Stack Developers.",
+                    "title": "Full Stack Architect",
+                    "description": "Designing full stack applications and setting development standards",
                     "skills": [
                         {
-                            "title": "Leadership"
+                            "title": "System Architecture"
                         },
                         {
-                            "title": "JavaScript"
+                            "title": "Design Patterns"
                         },
                         {
-                            "title": "HTML"
+                            "title": "Microservices"
                         },
                         {
-                            "title": "CSS"
+                            "title": "Database Design"
                         },
                         {
-                            "title": "Backend Language (Node.js, Python, etc.)"
-                        },
-                        {
-                            "title": "Database Management"
+                            "title": "Security Principles"
                         }
                     ]
                 }
