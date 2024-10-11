@@ -41,6 +41,7 @@ def single_prompt(prompt, model, temperature=0.6):
             "content": (
                 "You are an experienced career advisor with a deep understanding of career development paths. "
                 "Provide detailed and structured career metro-map with multiple paths, branches, and goals based on the user's input."
+                "Make sure that while making json Property name must be enclosed in double quotes"
             )
         }
 
@@ -128,6 +129,8 @@ def single_prompt(prompt, model, temperature=0.6):
                 - Each branch must contain at least 5+ steps and sub-branches.
                 - Ensure each step contains 5+ unique skills.
                 - The last step represents reaching the goal of the respective branch.
+                - Try your best to avoid all possible errors in the output and json formatting.
+                - Property name must be enclosed in double quotes.
                 """
             )
         }
@@ -177,13 +180,14 @@ def road_map_cv(resume_text, model, temperature= 0.6):
             "content": (
                 "You are an experienced career advisor with a deep understanding of career development paths. "
                 "Provide detailed and structured career metro-map with multiple paths, branches, and goals based on the user's input."
+                "Make sure that while making json Property name must be enclosed in double quotes"
             )
         }
 
         user_message = {
             "role": "user",
             "content": (
-                f"""Create an in-depth career roadmap with multiple branches, steps, and goals from the following text extracted from Resume/CV. 
+                f"""Create an in-depth career roadmap with multiple branches, steps, and goals from the following prompt. 
                 Include different paths (managerial, technical, exploratory) with unique colors while keeping the main path in consistency combined towards the end goal. The steps array must have a minimum of 8 steps, with at least 5 steps dedicated to the #f4b084 path (current path), and additional objects in the steps array for the remaining paths.
 
                 Resume Text: {resume_text}
@@ -264,6 +268,8 @@ def road_map_cv(resume_text, model, temperature= 0.6):
                 - Each branch must contain at least 5+ steps and sub-branches.
                 - Ensure each step contains 5+ unique skills.
                 - The last step represents reaching the goal of the respective branch.
+                - Try your best to avoid all possible errors in the output and json formatting.
+                - Property name must be enclosed in double quotes
                 """
             )
         }
@@ -286,6 +292,7 @@ def road_map_cv(resume_text, model, temperature= 0.6):
     
     
 def extract_json_from_content(content):
+  
     try:
       start_idx = content.find('{')
       end_idx = content.rfind('}') + 1
@@ -303,7 +310,11 @@ def extract_json_from_content(content):
     except Exception as e:
       logger.error(f"Error extracting JSON from content: {e}")
       return None
-      
+
+
+
+
+
 def send_notification (token,id):
     # print(node_server_url)
     URL = f"{node_server_url}/create-path-analyse-notifications/{id}"
@@ -410,7 +421,7 @@ def process_regenerate_roadmap(id, model, token):
             resume_text = extract_text_from_pdf(cv)
             max_retries = 4  
             for attempt in range(max_retries + 1):  
-                result = road_map_cv(resume_text, model, temperature=0.5)
+                result = road_map_cv(resume_text, model, temperature=0.35)
                 if result:
                     content = result['choices'][0]['message']['content']
                     response_formatted = extract_json_from_content(content)
@@ -426,7 +437,7 @@ def process_regenerate_roadmap(id, model, token):
             prompt = prompt_file_data[0] if prompt_file_data[0] else prompt_file_data[1]
             max_retries = 2  
             for attempt in range(max_retries + 1):  
-                result = single_prompt(prompt, model, temperature=0.5)
+                result = single_prompt(prompt, model, temperature=0.35)
                 if result:
                     content = result['choices'][0]['message']['content']
                     response_formatted = extract_json_from_content(content)
