@@ -1,6 +1,8 @@
 import mysql.connector
 from mysql.connector import Error
 from config import host, user, password, database
+import pandas as pd
+import json
 
 def create_connection():
     try:
@@ -156,6 +158,163 @@ def path_status_pending(id):
         finally:
             cursor.close()
             connection.close()
+
+
+def check_branch(branch_id):
+    try:
+        connection = create_connection()
+        if connection:
+            cursor = connection.cursor(dictionary=True)  
+            
+            cursor.execute('SELECT * FROM branch WHERE id = %s', (branch_id,))
+            parent_check = cursor.fetchall()
+
+            branch_origin = None
+            
+            if parent_check:
+                branch_info = parent_check[0]  
+                
+                branch_origin = branch_info['step_id'] if branch_info['step_id'] else None
+                
+                print(branch_origin)
+            else:
+                print(f"No branch found with ID: {branch_id}")
+                return pd.DataFrame()  
+            
+            first_row = None
+            if branch_origin:
+                cursor.execute('SELECT * FROM steps WHERE id = %s', (branch_origin,))
+                first_row = cursor.fetchall()    
+            
+            cursor.execute('SELECT * FROM steps WHERE branch_id = %s', (branch_id,))
+            rows = cursor.fetchall()
+            
+            df = pd.DataFrame(rows)
+            
+            if first_row:
+                first_row_df = pd.DataFrame(first_row)  
+                df = pd.concat([first_row_df, df], ignore_index=True) 
+            
+            cursor.close()
+            connection.close()
+            
+            return df
+    except Exception as e:
+        print(f"Error checking branch: {e}")
+        return pd.DataFrame()
+
+
+def check_skills(step_id):
+    try:
+        connection = create_connection()
+        if connection:
+            cursor = connection.cursor(dictionary=True)  
+            
+            cursor.execute('SELECT * FROM skills WHERE step_id = %s', (step_id,))
+            rows = cursor.fetchall()
+            
+            df = pd.DataFrame(rows)
+            
+            cursor.close()
+            connection.close()
+            
+            return df
+    except Exception as e:
+        print(f"Error checking skills: {e}")
+        return pd.DataFrame() 
+
+
+def get_all_steps_and_skills(branch_id):
+    steps_df = check_branch(branch_id) 
+    
+    if steps_df.empty:
+        print("No steps found for the given branch.")
+        return None
+    
+    all_steps_with_skills = []  
+    
+    for _, step_row in steps_df.iterrows():
+        step_id = step_row['id']
+        step_title = step_row['title']
+        
+        skills_df = check_skills(step_id)
+        
+        if not skills_df.empty:
+            skill_titles = skills_df['title'].to_list()
+        else:
+            skill_titles = []  
+        
+        all_steps_with_skills.append({
+            'step_title': step_title,
+            'skills': skill_titles
+        })
+    
+    return all_steps_with_skills  
+
+
+
+
+
+
+# def save_response_content(path_id, response_content):
+#     connection = create_connection()  
+#     if connection:
+#         try:
+#             cursor = connection.cursor()
+#             cursor.execute('SELECT id FROM path_gpt_response WHERE path_id = %s', (path_id,))
+#             existing_record = cursor.fetchone()
+            
+#             if existing_record:
+#                 cursor.execute('''
+#                     UPDATE path_gpt_response
+#                     SET response = %s
+#                     WHERE path_id = %s
+#                 ''', (response_content, path_id))
+#                 action = "response updated"
+#             else:
+#                 cursor.execute('''
+#                     INSERT INTO path_gpt_response (path_id, response)
+#                     VALUES (%s, %s)
+#                 ''', (path_id, response_content))
+#                 action = "response inserted"
+            
+#             connection.commit()
+#             return action    
+#         except Exception as e:
+#             print(f"An error occurred: {e}")
+#             connection.rollback()
+#             return f"Error: {str(e)}"  
+#         finally:
+#             cursor.close()  
+#             connection.close()  
+#     else:
+#         return "Error: Unable to create database connection." 
+
+
+# def get_response_content(path_id):
+#     connection = create_connection()  
+#     if connection:
+#         try:
+#             cursor = connection.cursor()
+#             cursor.execute('SELECT response FROM path_gpt_response WHERE path_id = %s', (path_id,))
+#             result = cursor.fetchone()
+#             connection.commit()  
+            
+#             if result:
+#                 return result[0] 
+#             else:
+#                 return None  
+#         except Exception as e:
+#             print(f"An error occurred: {e}")
+#             connection.rollback()
+#             return f"Error: {str(e)}"  
+#         finally:
+#             cursor.close()  
+#             connection.close()  
+#     else:
+#         return "Error: Unable to create database connection."
+        
+    
 
 # path_status_pending(3)
 # path_status_analyzing(3)
