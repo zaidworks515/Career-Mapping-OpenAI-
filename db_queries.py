@@ -225,31 +225,34 @@ def check_skills(step_id):
 
 
 def get_all_steps_and_skills(branch_id):
-    steps_df = check_branch(branch_id) 
+    steps_df = check_branch(branch_id)
     
     if steps_df.empty:
         print("No steps found for the given branch.")
         return None
     
-    all_steps_with_skills = []  
+    all_steps_with_skills = []
     
     for _, step_row in steps_df.iterrows():
         step_id = step_row['id']
         step_title = step_row['title']
-        
+    
         skills_df = check_skills(step_id)
         
         if not skills_df.empty:
-            skill_titles = skills_df['title'].to_list()
+            skill_details = [
+                {"name": skill_row['title'], "status": skill_row['status']}
+                for _, skill_row in skills_df.iterrows()
+            ]
         else:
-            skill_titles = []  
+            skill_details = []
         
         all_steps_with_skills.append({
             'step_title': step_title,
-            'skills': skill_titles
+            'skills': skill_details
         })
     
-    return all_steps_with_skills  
+    return all_steps_with_skills
 
 
 
