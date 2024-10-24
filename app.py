@@ -156,83 +156,6 @@ def single_prompt(prompt, model, temperature=0.6):
         return None
 
 
-# def training_steps_generation(previous_response, model, temperature=0.6):
-#     try:
-#         url = "https://api.openai.com/v1/chat/completions"
-#         headers = {
-#             "Authorization": f"Bearer {openai.api_key}",
-#             "Content-Type": "application/json"
-#         }
-
-#         if not isinstance(previous_response, str):
-#             previous_response = json.dumps(previous_response)
-
-#         system_message = {
-#             "role": "system",
-#             "content": (
-#                 "You are an experienced career advisor with a deep understanding of career development paths. "
-#                 "Provide detailed branch-wise training structure of the given career map highlighting the needs. "
-#                 "Make sure that while making JSON property names must be enclosed in double quotes."
-#             )
-#         }
-
-#         user_message = {
-#           "role": "user",
-#           "content": (
-#               f"""Create a detailed and separate training map for the following career map.
-              
-#               Career Map: {previous_response}
-              
-#               Structure the output in JSON as follows:
-#               {{
-#                   "branches": [
-#                       {{
-#                           "branch_color": "hex_color_code", 
-#                           "training_steps": [
-#                               {{
-#                                   "step_title": "Step name",
-#                                   "sub_steps": ["Sub-step 1", "Sub-step 2", ...]
-#                               }},
-#                               ...
-#                           ]
-#                       }},
-#                       ...
-#                   ]
-#               }}
-
-#               - Include all branches with different hex_color_code.
-#               - All training steps should be detailed, in asceding order and legitimate with respect to the given career map.
-#               - Make sure the output follows a nested structure where each branch contains a list of steps, and each step contains sub-steps.
-#               - Property names must be enclosed in double quotes, and ensure the JSON formatting is valid.
-#               """
-#           )
-#       }
-#         data = {
-#             "model": model,
-#             "messages": [system_message, user_message],
-#             "temperature": temperature
-#         }
-
-#         response = requests.post(url, headers=headers, json=data)
-
-#         if response is not None and response.status_code == 200:
-#             return response.json()
-#         else:
-#             logger.error(f"Failed to get a valid response from OpenAI API. Status code: {response.status_code}")
-#             return None
-
-#     except requests.exceptions.HTTPError as http_err:
-#         logger.error(f"HTTP error occurred: {http_err}")
-#     except requests.exceptions.RequestException as req_err:
-#         logger.error(f"Request error occurred: {req_err}")
-#     except Exception as e:
-#         logger.error(f"An unexpected error occurred: {str(e)}")
-
-#     return None
-
-
-
-
 def training_steps_generation(previous_response, current_date, model, temperature=0.6):
     try:
         url = "https://api.openai.com/v1/chat/completions"
@@ -248,62 +171,120 @@ def training_steps_generation(previous_response, current_date, model, temperatur
             "role": "system",
             "content": (
                 "You are an experienced career advisor with a deep understanding of career development training paths. "
-                "Provide a comprehensive training structure for the given career map, highlighting the key components as requested."
-                f"All of the planning and completion dates will be of future, current date is {current_date}"
+                "Provide a comprehensive training structure for the given career map, highlighting the key components as requested. "
+                f"All planning and completion dates should be set in the future. The current date is {current_date}. "
+                "You must complete all the skill steps outlined in the input career path as part of the skill_gap_analysis."
                 "Ensure the JSON formatting is valid with property names enclosed in double quotes."
             )
         }
 
         user_message = {
-          "role": "user",
-          "content": (
-              f"""Create a detailed training structure for the following career map.
-              
-              Career Map: {previous_response}
-              
-              Structure the output in JSON as follows:
-              {{
-                  "career_goals_overview": {{
-                      "short_term_goals": ["Goal 1", "Goal 2"],
-                      "long_term_goals": ["Goal A", "Goal B"],
-                      "key_milestones": [{{"goal": "Goal 1", "completion_date": "YYYY-MM-DD"}}] # Ensure this date is in the future
-                  }},
-                  "skill_gap_analysis": {{
-                      "current_skills": ["Skill 1", "Skill 2"], # this comes from the 1st row of input json given
-                      "skills_needed": [{{"skill": "Skill A", "priority": "High", "resources": ["Resource 1", "Resource 2"]}}],
-                      "skills_priority": [{{"skill": "Skill B", "priority": "Medium"}}]
-                  }},
-                  "training_activities": {{
-                      "activities": [{{"activity": "Workshop", "duration": "2 days", "date": "YYYY-MM-DD", "responsible": "Self"}}] # Date must be in the future
-                  }},
-                  "performance_metrics": {{
-                      "expected_outcomes": ["Outcome 1", "Outcome 2"],
-                      "methods_of_measuring_progress": ["Quizzes", "Feedback"]
-                  }},
-                  "career_path_progression_map": {{
-                      "current_role": "Current Role",
-                      "next_steps": [{{"role": "Next Role", "suggested_timing": "6 months"}}] # Suggest timing must be in the future
-                  }},
-                  "action_plan_summary": {{
-                      "action_steps": ["Step 1", "Step 2"],
-                      "key_responsibilities": ["User", "Manager"]
-                  }},
-                  "reflection_feedback": {{
-                      "reflection_space": "Notes on challenges or successes",
-                      "manager_feedback": "Feedback area"
-                  }},
-                  "next_steps_recommendations": ["Networking", "Join professional groups"]
-              }}
-              
-              - Ensure all dates (e.g., YYYY-MM-DD) are in the future and properly formatted.
-              - Multiple completion dates will be arranged in order, avoiding any conflicts with preceding dates.
-              - Course Resource links must be specific and authentic and could be from anywhere like book reference, youtube video reference, git repo etc.  
-              - Ensure the JSON formatting is valid with property names enclosed in double quotes.
-              - Provide a comprehensive breakdown of each section as per the request.
-              """
-          )
-      }
-        
+            "role": "user",
+            "content": (
+                f"""Create a detailed training structure for the following career map:
+                
+                Career Map: {previous_response}
+                
+                Structure the output in JSON as follows:
+                {{
+                    "career_goals_overview": [
+                        {{
+                            "title": "career goal description", # could be short term or long term
+                            "type": "s/l",  # if s then expected to be 6-12 months from the current date.
+                            "completion_date": "YYYY-MM-DD"  
+                        }},
+                        {{
+                            "title": "career goal description", # could be short term or long term
+                            "type": "s/l",   # if l then expected to be 1 to 5 years from the last preceedence date.
+                            "completion_date": "YYYY-MM-DD"  
+                        }}
+                        # Add more career goals if needed.
+                    ],
+                    "skill_gap_analysis": [
+                        {{
+                            "title": "Current Skill Title",
+                            "priority": null, # will always be null in current skills if status is completed, else priority will be 'high'.. (current skills will be in the first step of given input prompt)
+                            "status": "completed",
+                            "resources": null  # will always be null in current skills if status is completed, else resources will be needed (current skills will be in the first step of given input prompt)
+                        }},
+                        {{
+                            "title": "Skill Needed",
+                            "priority": "priority level", # could be high/medium/low as per the need.
+                            "status": "pending",
+                            "resources": [
+                                {{
+                                    "platform": "Platform Name",
+                                    "resource_title": "Resource Title",
+                                    "link": "https://example.com/resource-link"
+                                }},
+                                {{
+                                    "platform": "Platform Name",
+                                    "resource_title": "Resource Title",
+                                    "link": "https://example.com/resource-link"
+                                }}
+                            ]
+                        }}
+                        "You must complete all the skill steps outlined in the input career path as part of the skill_gap_analysis."
+                    ],
+                    "training_activities": [
+                        {{
+                            "title": "Training Activity Title",
+                            "expected_outcomes": "Outcome Description",
+                            "progress_measurement": "Measurement Method",
+                            "duration": "Duration (e.g., 2 days, 4 weeks)",
+                            "date": "YYYY-MM-DD",
+                            "responsible": "Self"
+                        }}
+                    ],
+                    "career_path_progression_map": {{
+                        "steps": [
+                            {{
+                                "role": "Current Role Title",
+                                "suggested_timing": null  #will always be null in current role
+                            }},
+                            {{
+                                "role": "Next Role Title",
+                                "suggested_timing": "6 months"  # may vary with the complexity level to handle
+                            }},
+                            {{
+                                "role": "Advanced Role Title",
+                                "suggested_timing": "12 months"  # may vary with the complexity level to handle
+                            }}
+                        ]
+                    }},
+                    "action_plan_summary": [
+                        {{
+                            "action": "Action Description",
+                            "responsibility": "Self or Mentor"
+                        }},
+                        {{
+                            "action": "Another Action Description",
+                            "responsibility": "Self or Mentor"
+                        }},
+                        # Add more actions according to need and balance between self and mentor responsibilities.
+                    ],
+                    "next_steps_recommendations": [
+                        "Recommendation 1",
+                        "Recommendation 2",
+                        "Recommendation 3"
+                        # add more if needed
+                    ],
+                    "additional_actions_to_support_career_growth": [
+                        "Recommendations for continuous learning beyond initial training. (Long but valid description)"
+                    ]
+                }}
+                
+                - Ensure all dates (e.g., YYYY-MM-DD) are in the future, dependant to each other avoiding any conflicts and properly formatted.
+                - Arrange completion dates sequentially, avoiding any overlap or conflicts with preceding dates.
+                - Include resources with valid and relevant links for each skill when applicable.
+                - Learning resource links might be of a book, course, video tutorial, online article, GitHub repository, or any other educational material that is relevant to building the required skills.                
+                - All of the problem solving and technical skills will be highly prioritized in 'skill_gap_analysis' irrespective of its time.                
+                - Ensure that JSON formatting is valid with property names enclosed in double quotes.
+                - Provide a comprehensive breakdown of each section as per the request.
+                """
+            )
+        }
+
         data = {
             "model": model,
             "messages": [system_message, user_message],
@@ -315,18 +296,17 @@ def training_steps_generation(previous_response, current_date, model, temperatur
         if response is not None and response.status_code == 200:
             return response.json()
         else:
-            logger.error(f"Failed to get a valid response from OpenAI API. Status code: {response.status_code}")
+            logging.error(f"Failed to get a valid response from OpenAI API. Status code: {response.status_code}, Response: {response.text}")
             return None
 
     except requests.exceptions.HTTPError as http_err:
-        logger.error(f"HTTP error occurred: {http_err}")
+        logging.error(f"HTTP error occurred: {http_err}")
     except requests.exceptions.RequestException as req_err:
-        logger.error(f"Request error occurred: {req_err}")
+        logging.error(f"Request error occurred: {req_err}")
     except Exception as e:
-        logger.error(f"An unexpected error occurred: {str(e)}")
+        logging.error(f"An unexpected error occurred: {str(e)}")
 
     return None
-
 
 
 def extract_text_from_pdf(pdf_path):
@@ -665,7 +645,7 @@ def process_training_steps(input_content, model, max_retries):
         try:
             current_date = datetime.now()
             current_date_str = current_date.strftime("%Y-%m-%d")
-            response = training_steps_generation(previous_response=input_content, current_date=current_date_str, model=model, temperature=0.6)
+            response = training_steps_generation(previous_response=input_content, current_date=current_date_str, model=model, temperature=0.7)
 
             if response and 'choices' in response and response['choices']:
                 content = response['choices'][0]['message']['content']
