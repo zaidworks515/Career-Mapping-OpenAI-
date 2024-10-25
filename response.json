@@ -1,216 +1,166 @@
 {
     "roadmap": {
         "branch": {
-            "color": "black",
+            "color": "#f4b084",
             "steps": [
                 {
-                    "title": "Javascript Developer",
-                    "description": "Current position working with Javascript for web development",
+                    "title": "Graduate from Law School",
+                    "description": "Complete your law degree to gain foundational legal knowledge.",
                     "skills": [
                         {
-                            "title": "Javascript"
+                            "title": "Legal Research"
                         },
                         {
-                            "title": "HTML"
+                            "title": "Critical Thinking"
                         },
                         {
-                            "title": "CSS"
+                            "title": "Communication"
                         },
                         {
-                            "title": "Git"
+                            "title": "Time Management"
                         },
                         {
-                            "title": "React"
-                        },
-                        {
-                            "title": "Node.js"
+                            "title": "Problem Solving"
                         }
                     ],
                     "branches": [
                         {
-                            "color": "green",
+                            "color": "#a9d08e",
                             "steps": [
                                 {
-                                    "title": "Software Engineer",
-                                    "description": "Developing and maintaining software systems",
+                                    "title": "Explore Legal Internships",
+                                    "description": "Gain practical experience in various legal settings.",
                                     "skills": [
                                         {
-                                            "title": "Data Structures"
+                                            "title": "Networking"
                                         },
                                         {
-                                            "title": "Algorithms"
+                                            "title": "Client Interaction"
                                         },
                                         {
-                                            "title": "Java"
+                                            "title": "Document Drafting"
                                         },
                                         {
-                                            "title": "C++"
+                                            "title": "Case Analysis"
                                         },
                                         {
-                                            "title": "Python"
+                                            "title": "Adaptability"
                                         }
                                     ]
                                 },
                                 {
-                                    "title": "Senior Software Engineer",
-                                    "description": "Designing software systems and leading projects",
+                                    "title": "Participate in Moot Courts",
+                                    "description": "Enhance your advocacy and public speaking skills.",
                                     "skills": [
                                         {
-                                            "title": "System Design"
+                                            "title": "Public Speaking"
                                         },
                                         {
-                                            "title": "Project Management"
+                                            "title": "Persuasion"
                                         },
                                         {
-                                            "title": "Leadership"
+                                            "title": "Legal Writing"
                                         },
                                         {
-                                            "title": "Debugging"
+                                            "title": "Teamwork"
                                         },
                                         {
-                                            "title": "Problem-solving"
+                                            "title": "Confidence"
                                         }
                                     ]
                                 },
                                 {
-                                    "title": "Software Architect",
-                                    "description": "Creating high-level design choices and dictating technical standards",
+                                    "title": "Join Legal Workshops",
+                                    "description": "Attend workshops to broaden your legal knowledge.",
                                     "skills": [
                                         {
-                                            "title": "System Architecture"
+                                            "title": "Continuous Learning"
                                         },
                                         {
-                                            "title": "Technical Leadership"
+                                            "title": "Legal Updates"
                                         },
                                         {
-                                            "title": "Communication"
+                                            "title": "Analytical Skills"
                                         },
                                         {
-                                            "title": "Business Knowledge"
+                                            "title": "Collaboration"
                                         },
                                         {
-                                            "title": "Critical Thinking"
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "color": "purple",
-                            "steps": [
-                                {
-                                    "title": "Project Manager",
-                                    "description": "Managing software development projects",
-                                    "skills": [
-                                        {
-                                            "title": "Project Planning"
-                                        },
-                                        {
-                                            "title": "Risk Management"
-                                        },
-                                        {
-                                            "title": "Budgeting"
-                                        },
-                                        {
-                                            "title": "Quality Control"
-                                        },
-                                        {
-                                            "title": "Leadership"
+                                            "title": "Detail Orientation"
                                         }
                                     ]
                                 },
                                 {
-                                    "title": "Program Manager",
-                                    "description": "Managing multiple related projects",
+                                    "title": "Volunteer for Legal Aid",
+                                    "description": "Contribute to community legal services to gain experience.",
                                     "skills": [
                                         {
-                                            "title": "Program Management"
+                                            "title": "Empathy"
+                                        },
+                                        {
+                                            "title": "Community Engagement"
+                                        },
+                                        {
+                                            "title": "Client Advocacy"
+                                        },
+                                        {
+                                            "title": "Resourcefulness"
+                                        },
+                                        {
+                                            "title": "Ethical Judgment"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "title": "Explore Alternative Legal Careers",
+                                    "description": "Consider roles such as legal consultant or mediator.",
+                                    "skills": [
+                                        {
+                                            "title": "Negotiation"
+                                        },
+                                        {
+                                            "title": "Conflict Resolution"
+                                        },
+                                        {
+                                            "title": "Consulting"
                                         },
                                         {
                                             "title": "Strategic Planning"
                                         },
                                         {
-                                            "title": "Stakeholder Management"
-                                        },
-                                        {
-                                            "title": "Resource Allocation"
-                                        },
-                                        {
-                                            "title": "Conflict Resolution"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "title": "CTO (Chief Technical Officer)",
-                                    "description": "Overseeing all technical aspects and technological resources of an organization",
-                                    "skills": [
-                                        {
-                                            "title": "Technical Vision"
-                                        },
-                                        {
-                                            "title": "Business Strategy"
-                                        },
-                                        {
-                                            "title": "Team Leadership"
-                                        },
-                                        {
-                                            "title": "Technology Evaluation"
-                                        },
-                                        {
-                                            "title": "Decision Making"
+                                            "title": "Business Acumen"
                                         }
                                     ]
                                 }
                             ]
                         },
                         {
-                            "color": "blue",
+                            "color": "#ccccff",
                             "steps": [
                                 {
-                                    "title": "Backend Developer",
-                                    "description": "Working with servers, databases, and application logic",
+                                    "title": "Pursue a Master's in Law (LLM)",
+                                    "description": "Specialize in a specific area of law to enhance expertise.",
                                     "skills": [
                                         {
-                                            "title": "Node.js"
+                                            "title": "Specialization"
                                         },
                                         {
-                                            "title": "Express.js"
+                                            "title": "Advanced Research"
                                         },
                                         {
-                                            "title": "SQL"
+                                            "title": "Legal Theory"
                                         },
                                         {
-                                            "title": "MongoDB"
+                                            "title": "Academic Writing"
                                         },
                                         {
-                                            "title": "RESTful APIs"
+                                            "title": "Critical Analysis"
                                         }
                                     ]
                                 },
                                 {
-                                    "title": "Full Stack Developer",
-                                    "description": "Working with both front-end and back-end of web development",
-                                    "skills": [
-                                        {
-                                            "title": "React.js"
-                                        },
-                                        {
-                                            "title": "Node.js"
-                                        },
-                                        {
-                                            "title": "Express.js"
-                                        },
-                                        {
-                                            "title": "MongoDB"
-                                        },
-                                        {
-                                            "title": "Full Stack Web Development"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "title": "Senior Full Stack Developer",
-                                    "description": "Leading full stack development projects and teams",
+                                    "title": "Gain Experience as a Legal Associate",
+                                    "description": "Work in a law firm to gain managerial experience.",
                                     "skills": [
                                         {
                                             "title": "Team Leadership"
@@ -219,34 +169,186 @@
                                             "title": "Project Management"
                                         },
                                         {
-                                            "title": "System Design"
+                                            "title": "Client Relations"
                                         },
                                         {
-                                            "title": "Performance Testing"
+                                            "title": "Decision Making"
                                         },
                                         {
-                                            "title": "Code Review"
+                                            "title": "Negotiation"
                                         }
                                     ]
                                 },
                                 {
-                                    "title": "Full Stack Architect",
-                                    "description": "Designing full stack applications and setting development standards",
+                                    "title": "Become a Senior Associate",
+                                    "description": "Take on more responsibilities and lead junior associates.",
                                     "skills": [
                                         {
-                                            "title": "System Architecture"
+                                            "title": "Mentoring"
                                         },
                                         {
-                                            "title": "Design Patterns"
+                                            "title": "Strategic Thinking"
                                         },
                                         {
-                                            "title": "Microservices"
+                                            "title": "Budget Management"
                                         },
                                         {
-                                            "title": "Database Design"
+                                            "title": "Risk Assessment"
                                         },
                                         {
-                                            "title": "Security Principles"
+                                            "title": "Performance Evaluation"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "title": "Pursue a Legal Managerial Role",
+                                    "description": "Manage a team of lawyers and oversee legal operations.",
+                                    "skills": [
+                                        {
+                                            "title": "Leadership"
+                                        },
+                                        {
+                                            "title": "Operational Management"
+                                        },
+                                        {
+                                            "title": "Conflict Resolution"
+                                        },
+                                        {
+                                            "title": "Policy Development"
+                                        },
+                                        {
+                                            "title": "Change Management"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "title": "Aim for a Partner Position",
+                                    "description": "Become a partner in a law firm to lead strategic decisions.",
+                                    "skills": [
+                                        {
+                                            "title": "Visionary Leadership"
+                                        },
+                                        {
+                                            "title": "Business Development"
+                                        },
+                                        {
+                                            "title": "Client Acquisition"
+                                        },
+                                        {
+                                            "title": "Financial Acumen"
+                                        },
+                                        {
+                                            "title": "Crisis Management"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "color": "#9bc2e6",
+                            "steps": [
+                                {
+                                    "title": "Gain Technical Legal Skills",
+                                    "description": "Learn about legal technology and its applications.",
+                                    "skills": [
+                                        {
+                                            "title": "Legal Tech Proficiency"
+                                        },
+                                        {
+                                            "title": "Data Analysis"
+                                        },
+                                        {
+                                            "title": "Cybersecurity Awareness"
+                                        },
+                                        {
+                                            "title": "E-Discovery"
+                                        },
+                                        {
+                                            "title": "Tech Literacy"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "title": "Work as a Legal Technologist",
+                                    "description": "Apply technology solutions to legal processes.",
+                                    "skills": [
+                                        {
+                                            "title": "Process Automation"
+                                        },
+                                        {
+                                            "title": "System Integration"
+                                        },
+                                        {
+                                            "title": "Project Coordination"
+                                        },
+                                        {
+                                            "title": "Innovation"
+                                        },
+                                        {
+                                            "title": "Technical Support"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "title": "Become a Legal Technology Consultant",
+                                    "description": "Advise firms on implementing legal technology.",
+                                    "skills": [
+                                        {
+                                            "title": "Consulting"
+                                        },
+                                        {
+                                            "title": "Solution Design"
+                                        },
+                                        {
+                                            "title": "Client Engagement"
+                                        },
+                                        {
+                                            "title": "Technical Writing"
+                                        },
+                                        {
+                                            "title": "Market Awareness"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "title": "Lead a Legal Tech Team",
+                                    "description": "Oversee a team developing legal tech solutions.",
+                                    "skills": [
+                                        {
+                                            "title": "Team Leadership"
+                                        },
+                                        {
+                                            "title": "Product Management"
+                                        },
+                                        {
+                                            "title": "Strategic Planning"
+                                        },
+                                        {
+                                            "title": "Agile Methodologies"
+                                        },
+                                        {
+                                            "title": "Budgeting"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "title": "Become a Chief Legal Technologist",
+                                    "description": "Lead innovation in legal technology at an organizational level.",
+                                    "skills": [
+                                        {
+                                            "title": "Visionary Leadership"
+                                        },
+                                        {
+                                            "title": "Tech Strategy"
+                                        },
+                                        {
+                                            "title": "Change Management"
+                                        },
+                                        {
+                                            "title": "Stakeholder Engagement"
+                                        },
+                                        {
+                                            "title": "Industry Influence"
                                         }
                                     ]
                                 }
@@ -255,119 +357,107 @@
                     ]
                 },
                 {
-                    "title": "Frontend Developer",
-                    "description": "Working with UI/UX elements and front-end technologies",
+                    "title": "Complete Legal Practice Course (LPC)",
+                    "description": "Enroll in and complete the LPC to gain practical skills needed for legal practice.",
                     "skills": [
                         {
-                            "title": "HTML"
+                            "title": "Practical Legal Skills"
                         },
                         {
-                            "title": "CSS"
+                            "title": "Client Interviewing"
                         },
                         {
-                            "title": "Javascript"
+                            "title": "Drafting Legal Documents"
                         },
                         {
-                            "title": "React"
+                            "title": "Advocacy"
                         },
                         {
-                            "title": "Vue.js"
-                        },
-                        {
-                            "title": "Angular.js"
+                            "title": "Professional Ethics"
                         }
                     ]
                 },
                 {
-                    "title": "Backend Developer",
-                    "description": "Working with server-side logic and databases",
+                    "title": "Secure a Training Contract",
+                    "description": "Obtain a training contract with a law firm to gain hands-on experience.",
                     "skills": [
                         {
-                            "title": "Node.js"
+                            "title": "Networking"
                         },
                         {
-                            "title": "Express.js"
+                            "title": "Professionalism"
                         },
                         {
-                            "title": "SQL"
+                            "title": "Time Management"
                         },
                         {
-                            "title": "MongoDB"
+                            "title": "Attention to Detail"
                         },
                         {
-                            "title": "RESTful APIs"
+                            "title": "Client Service"
                         }
                     ]
                 },
                 {
-                    "title": "Full Stack Developer",
-                    "description": "Working across the full stack of web development",
+                    "title": "Complete Training Contract",
+                    "description": "Fulfill the requirements of your training contract to qualify as a solicitor.",
                     "skills": [
                         {
-                            "title": "HTML"
+                            "title": "Legal Practice"
                         },
                         {
-                            "title": "CSS"
+                            "title": "Case Management"
                         },
                         {
-                            "title": "Javascript"
+                            "title": "Research Skills"
                         },
                         {
-                            "title": "React"
+                            "title": "Team Collaboration"
                         },
                         {
-                            "title": "Node.js"
-                        },
-                        {
-                            "title": "Express.js"
-                        },
-                        {
-                            "title": "MongoDB"
-                        },
-                        {
-                            "title": "RESTful APIs"
+                            "title": "Ethical Practice"
                         }
                     ]
                 },
                 {
-                    "title": "Senior Full Stack Developer",
-                    "description": "Leading full stack development projects and teams",
+                    "title": "Pass the Solicitors Qualifying Examination (SQE)",
+                    "description": "Successfully pass the SQE to become a qualified solicitor.",
                     "skills": [
                         {
-                            "title": "Team Leadership"
+                            "title": "Exam Preparation"
                         },
                         {
-                            "title": "Project Management"
+                            "title": "Legal Knowledge"
                         },
                         {
-                            "title": "System Design"
+                            "title": "Analytical Skills"
                         },
                         {
-                            "title": "Performance Testing"
+                            "title": "Problem Solving"
                         },
                         {
-                            "title": "Code Review"
+                            "title": "Resilience"
                         }
                     ]
                 },
                 {
-                    "title": "Full Stack Architect",
-                    "description": "Designing full stack applications and setting development standards",
+                    "title": "Register as a Solicitor",
+                    "description": "Complete the registration process to officially become a solicitor.",
                     "skills": [
                         {
-                            "title": "System Architecture"
+                            "title": "Regulatory Compliance"
                         },
                         {
-                            "title": "Design Patterns"
+                            "title": "Professional Conduct"
                         },
                         {
-                            "title": "Microservices"
+                            "title": "Client Management"
                         },
                         {
-                            "title": "Database Design"
+                            "title": "Legal Representation"
                         },
                         {
-                            "title": "Security Principles"
+                            "title": "Continuous Professional Development"
                         }
                     ]
                 }

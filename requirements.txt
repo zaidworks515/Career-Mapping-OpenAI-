@@ -6,3 +6,4 @@ PyPDF2
 mysql-connector-python
 python-dotenv
 PyJWT==1.7.1
+pandas
