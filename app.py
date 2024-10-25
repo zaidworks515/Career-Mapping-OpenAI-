@@ -156,9 +156,163 @@ def single_prompt(prompt, model, temperature=0.6):
         return None
 
 
+# def training_steps_generation(previous_response, current_date, model, temperature=0.6):
+#     try:
+#         url = "https://api.openai.com/v1/chat/completions"
+#         headers = {
+#             "Authorization": f"Bearer {openai.api_key}",
+#             "Content-Type": "application/json"
+#         }
+
+#         if not isinstance(previous_response, str):
+#             previous_response = json.dumps(previous_response)
+
+#         system_message = {
+#             "role": "system",
+#             "content": (
+#                 "You are an experienced career advisor with a deep understanding of career development training paths. "
+#                 "Provide a comprehensive training structure for the given career map, highlighting the key components as requested. "
+#                 f"All planning and completion dates should be set in the future. The current date is {current_date}. "
+#                 "You must complete all the skill steps outlined in the input career path as part of the skill_gap_analysis."
+#                 "Ensure the JSON formatting is valid with property names enclosed in double quotes."
+#             )
+#         }
+
+#         user_message = {
+#             "role": "user",
+#             "content": (
+#                 f"""Create a detailed training structure for the following career map:
+                
+#                 Career Map: {previous_response}
+                
+#                 Structure the output in JSON as follows:
+#                 {{
+#                     "career_goals_overview": [
+#                         {{
+#                             "title": "career goal description", # could be short term or long term
+#                             "type": "s/l",  # if s then expected to be 6-12 months from the current date.
+#                             "completion_date": "YYYY-MM-DD"  
+#                         }},
+#                         {{
+#                             "title": "career goal description", # could be short term or long term
+#                             "type": "s/l",   # if l then expected to be 1 to 5 years from the last preceedence date.
+#                             "completion_date": "YYYY-MM-DD"  
+#                         }}
+#                         # Add more career goals if needed.
+#                     ],
+#                     "skill_gap_analysis": [
+#                         {{
+#                             "title": "Current Skill Title",
+#                             "priority": null, # will always be null in current skills if status is completed, else priority will be 'high'.. (current skills will be in the first step of given input prompt)
+#                             "status": "completed",
+#                             "resources": null  # will always be null in current skills if status is completed, else resources will be needed (current skills will be in the first step of given input prompt)
+#                         }},
+#                         {{
+#                             "title": "Skill Needed",
+#                             "priority": "priority level", # could be high/medium/low as per the need.
+#                             "status": "pending",
+#                             "resources": [
+#                                 {{
+#                                     "platform": "Platform Name",
+#                                     "resource_title": "Resource Title",
+#                                     "link": "https://example.com/resource-link"
+#                                 }},
+#                                 {{
+#                                     "platform": "Platform Name",
+#                                     "resource_title": "Resource Title",
+#                                     "link": "https://example.com/resource-link"
+#                                 }}
+#                             ]
+#                         }}
+#                         "You must complete all the skill steps outlined in the input career path as part of the skill_gap_analysis."
+#                     ],
+#                     "training_activities": [
+#                         {{
+#                             "title": "Training Activity Title",
+#                             "expected_outcomes": "Outcome Description",
+#                             "progress_measurement": "Measurement Method",
+#                             "duration": "Duration (e.g., 2 days, 4 weeks)",
+#                             "date": "YYYY-MM-DD",
+#                             "responsible": "Self"
+#                         }}
+#                     ],
+#                     "career_path_progression_map": {{
+#                         "steps": [
+#                             {{
+#                                 "role": "Current Role Title",
+#                                 "suggested_timing": null  #will always be null in current role
+#                             }},
+#                             {{
+#                                 "role": "Next Role Title",
+#                                 "suggested_timing": "6 months"  # may vary with the complexity level to handle
+#                             }},
+#                             {{
+#                                 "role": "Advanced Role Title",
+#                                 "suggested_timing": "12 months"  # may vary with the complexity level to handle
+#                             }}
+#                         ]
+#                     }},
+#                     "action_plan_summary": [
+#                         {{
+#                             "action": "Action Description",
+#                             "responsibility": "Self or Mentor"
+#                         }},
+#                         {{
+#                             "action": "Another Action Description",
+#                             "responsibility": "Self or Mentor"
+#                         }},
+#                         # Add more actions according to need and balance between self and mentor responsibilities.
+#                     ],
+#                     "next_steps_recommendations": [
+#                         "Recommendation 1",
+#                         "Recommendation 2",
+#                         "Recommendation 3"
+#                         # add more if needed
+#                     ],
+#                     "additional_actions_to_support_career_growth": [
+#                         "Recommendations for continuous learning beyond initial training. (Long but valid description)"
+#                     ]
+#                 }}
+                
+#                 - Ensure all dates (e.g., YYYY-MM-DD) are in the future, dependant to each other avoiding any conflicts and properly formatted.
+#                 - Arrange completion dates sequentially, avoiding any overlap or conflicts with preceding dates.
+#                 - Include resources with valid and relevant links for each skill when applicable.
+#                 - Learning resource links might be of a book, course, video tutorial, online article, GitHub repository, or any other educational material that is relevant to building the required skills.                
+#                 - All of the problem solving and technical skills will be highly prioritized in 'skill_gap_analysis' irrespective of its time.                
+#                 - Ensure that JSON formatting is valid with property names enclosed in double quotes.
+#                 - Provide a comprehensive breakdown of each section as per the request.
+#                 """
+#             )
+#         }
+
+#         data = {
+#             "model": model,
+#             "messages": [system_message, user_message],
+#             "temperature": temperature
+#         }
+
+#         response = requests.post(url, headers=headers, json=data)
+
+#         if response is not None and response.status_code == 200:
+#             return response.json()
+#         else:
+#             logging.error(f"Failed to get a valid response from OpenAI API. Status code: {response.status_code}, Response: {response.text}")
+#             return None
+
+#     except requests.exceptions.HTTPError as http_err:
+#         logging.error(f"HTTP error occurred: {http_err}")
+#     except requests.exceptions.RequestException as req_err:
+#         logging.error(f"Request error occurred: {req_err}")
+#     except Exception as e:
+#         logging.error(f"An unexpected error occurred: {str(e)}")
+
+#     return None
+
+
 def training_steps_generation(previous_response, current_date, model, temperature=0.6):
     try:
         url = "https://api.openai.com/v1/chat/completions"
+
         headers = {
             "Authorization": f"Bearer {openai.api_key}",
             "Content-Type": "application/json"
@@ -173,7 +327,7 @@ def training_steps_generation(previous_response, current_date, model, temperatur
                 "You are an experienced career advisor with a deep understanding of career development training paths. "
                 "Provide a comprehensive training structure for the given career map, highlighting the key components as requested. "
                 f"All planning and completion dates should be set in the future. The current date is {current_date}. "
-                "You must complete all the skill steps outlined in the input career path as part of the skill_gap_analysis."
+                "You must complete all the skill steps outlined in the input career path as part of the skill_gap_analysis. "
                 "Ensure the JSON formatting is valid with property names enclosed in double quotes."
             )
         }
@@ -189,27 +343,27 @@ def training_steps_generation(previous_response, current_date, model, temperatur
                 {{
                     "career_goals_overview": [
                         {{
-                            "title": "career goal description", # could be short term or long term
-                            "type": "s/l",  # if s then expected to be 6-12 months from the current date.
-                            "completion_date": "YYYY-MM-DD"  
+                            "title": "career goal description",  # Could be short-term or long-term goal.
+                            "type": "s/l",  # 's' for short-term (6-12 months), 'l' for long-term (1-5 years).
+                            "completion_date": "YYYY-MM-DD"  # Date should be in the future.
                         }},
                         {{
-                            "title": "career goal description", # could be short term or long term
-                            "type": "s/l",   # if l then expected to be 1 to 5 years from the last preceedence date.
-                            "completion_date": "YYYY-MM-DD"  
+                            "title": "career goal description",
+                            "type": "s/l",
+                            "completion_date": "YYYY-MM-DD"
                         }}
                         # Add more career goals if needed.
                     ],
                     "skill_gap_analysis": [
                         {{
                             "title": "Current Skill Title",
-                            "priority": null, # will always be null in current skills if status is completed, else priority will be 'high'.. (current skills will be in the first step of given input prompt)
+                            "priority": null,  # Null if status is 'completed', otherwise 'high'.
                             "status": "completed",
-                            "resources": null  # will always be null in current skills if status is completed, else resources will be needed (current skills will be in the first step of given input prompt)
+                            "resources": null  # Null if status is 'completed', otherwise include relevant resources.
                         }},
                         {{
                             "title": "Skill Needed",
-                            "priority": "priority level", # could be high/medium/low as per the need.
+                            "priority": "priority level",  # Can be high/medium/low.
                             "status": "pending",
                             "resources": [
                                 {{
@@ -224,7 +378,7 @@ def training_steps_generation(previous_response, current_date, model, temperatur
                                 }}
                             ]
                         }}
-                        "You must complete all the skill steps outlined in the input career path as part of the skill_gap_analysis."
+                        # Add all required skill steps outlined in the input.
                     ],
                     "training_activities": [
                         {{
@@ -235,24 +389,24 @@ def training_steps_generation(previous_response, current_date, model, temperatur
                             "date": "YYYY-MM-DD",
                             "responsible": "Self"
                         }}
+                        # Add more training activities as needed.
                     ],
-                    "career_path_progression_map": {{
-                        "steps": [
-                            {{
-                                "role": "Current Role Title",
-                                "suggested_timing": null  #will always be null in current role
-                            }},
-                            {{
-                                "role": "Next Role Title",
-                                "suggested_timing": "6 months"  # may vary with the complexity level to handle
-                            }},
-                            {{
-                                "role": "Advanced Role Title",
-                                "suggested_timing": "12 months"  # may vary with the complexity level to handle
-                            }}
-                        ]
-                    }},
-                    "action_plan_summary": [
+                    "career_path_progression_map": [
+                        {{
+                            "role": "Current Role Title",
+                            "suggested_timing": null  # Null for the current role.
+                        }},
+                        {{
+                            "role": "Next Role Title",
+                            "suggested_timing": "6 months"  # Adjust based on complexity.
+                        }},
+                        {{
+                            "role": "Advanced Role Title",
+                            "suggested_timing": "12 months"  # Adjust based on complexity.
+                        }}
+                        # Add additional roles as necessary.
+                    ],
+                    "action_plan_summary": [ # If there are pending skills in the current state, add this as a recommendation
                         {{
                             "action": "Action Description",
                             "responsibility": "Self or Mentor"
@@ -260,18 +414,17 @@ def training_steps_generation(previous_response, current_date, model, temperatur
                         {{
                             "action": "Another Action Description",
                             "responsibility": "Self or Mentor"
-                        }},
-                        # Add more actions according to need and balance between self and mentor responsibilities.
+                        }}
+                        # Add more actions as needed, balancing between self and mentor responsibilities (both should have some responsibility).
                     ],
-                    "next_steps_recommendations": [
+                    "next_steps_recommendations": [ 
                         "Recommendation 1",
                         "Recommendation 2",
                         "Recommendation 3"
-                        # add more if needed
+                        # Add more if needed.
                     ],
-                    "additional_actions_to_support_career_growth": [
-                        "Recommendations for continuous learning beyond initial training. (Long but valid description)"
-                    ]
+                    "additional_actions_to_support_career_growth": "Recommendations for continuous learning beyond initial training. (Detailed but valid description)."
+                    
                 }}
                 
                 - Ensure all dates (e.g., YYYY-MM-DD) are in the future, dependant to each other avoiding any conflicts and properly formatted.
@@ -307,6 +460,7 @@ def training_steps_generation(previous_response, current_date, model, temperatur
         logging.error(f"An unexpected error occurred: {str(e)}")
 
     return None
+
 
 
 def extract_text_from_pdf(pdf_path):
