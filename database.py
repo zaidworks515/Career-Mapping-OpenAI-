@@ -1,6 +1,6 @@
 import mysql.connector
 from config import host, user, password, database
-
+import json
 
 class DataBase():
     def get_connection(self):
@@ -212,21 +212,7 @@ class DataBase():
         finally:
             cursor.close()
             connection.close()
-            
-    def delete_plan_by_id(self, plan_id):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            delete_query = "DELETE FROM trainning_plan WHERE id = %s"
-            cursor.execute(delete_query, (plan_id,))
-            connection.commit()
-            print(f"Row with ID {plan_id} deleted successfully.")
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-        finally:
-            cursor.close()
-            connection.close()
-            
+                    
     def dynamic_delete(self, table, column, id):
         connection = self.get_connection()
         cursor = connection.cursor()
@@ -255,10 +241,8 @@ class DataBase():
             cursor.close()
             connection.close()
         
-
     def delete_plan(self, path_id):
         branch_ids = self.get_branch_id_by_path_id(path_id)
-        print(branch_ids)
         plan_ids = []
         analysis_ids = []
         for branch_id in branch_ids:
@@ -284,7 +268,6 @@ class DataBase():
         for branch_idds in branch_ids:
             self.dynamic_delete("trainning_plan", "branch_id", branch_idds)
 
-    
     def insert_road_map(self, data, path_id):
         self.delete_plan(path_id)
         self.delete_data_by_path_id(path_id)
@@ -428,22 +411,15 @@ class DataBase():
         next_steps_recommendations = data.get("next_steps_recommendations", None)
 
         if additional_actions_to_support_career_growth:
-            # print(additional_actions_to_support_career_growth)
             plan_id = self.insert_trainning_plan(additional_actions_to_support_career_growth, branch_id)
-            # print(plan_id)
 
-            # print("=" * 100)
             if career_goals_overview:
                 for goal in career_goals_overview:
                     title = goal.get("title", "")
                     type = goal.get("type", "")
                     completion_date = goal.get("completion_date", "")
-                    # print(title, type, completion_date)
                     career_goals_overview_id = self.insert_career_goals_overview(plan_id, title, type, completion_date)
-            #         print(career_goals_overview_id)
-            #         print("-" * 100)
 
-            # print("=" * 100)
             if skill_gap_analysis:
                 for skill in skill_gap_analysis:
                     title = skill.get("title", "")
@@ -451,21 +427,14 @@ class DataBase():
                     status = skill.get("status", "")
                     resources = skill.get("resources", "")
                     skill_gap_analysis_id = self.insert_skill_gap_analysis(plan_id, title, priority, status)
-                    # print(skill_gap_analysis_id)
-                    # print(title, priority, status)
-                    # print("resource :")
+
                     if resources:
                         for resource in resources:
                             platform = resource.get("platform", "")
                             resource_title = resource.get("resource_title", "")
                             link = resource.get("link", "")
                             resource_id = self.insert_skill_gap_analysis_resources(skill_gap_analysis_id, title, platform, link)
-                            # print(resource_id)
-                            # print(platform, resource_title, link)
 
-                    # print("-" * 100)
-
-            # print("=" * 100)
             if training_activities:
                 for training in training_activities:
                     title = training.get("title", "")
@@ -477,37 +446,26 @@ class DataBase():
                     training_activitiy_id = self.insert_training_activities(plan_id, title, expected_outcomes,
                                                                             progress_measurement, duration, date,
                                                                             responsible)
-                    # print(training_activitiy_id)
-                    # print(title, expected_outcomes, progress_measurement, duration, date, responsible)
-                    # print("-" * 100)
 
-            # print("=" * 100)
             if career_path_progression_map:
                 for map in career_path_progression_map:
                     role = map.get("role", "")
                     suggested_timing = map.get("suggested_timing", "")
                     career_path_progression_map_id = self.insert_career_path_progression_map(plan_id, role, suggested_timing)
-                    # print(career_path_progression_map_id)
-                    # print(role, suggested_timing)
-                    # print("-" * 100)
 
-            # print("=" * 100)
             if action_plan_summary:
                 for summary in action_plan_summary:
                     action = summary.get("action", "")
                     responsibility = summary.get("responsibility", "")
                     summary_id = self.insert_action_plan_summary(plan_id, action, responsibility)
-                    # print(summary_id)
-                    # print(action, responsibility)
-                    # print("-" * 100)
 
             if next_steps_recommendations:
                 for recommendation in next_steps_recommendations:
                     recommendation_id = self.insert_next_steps_recommendations(plan_id, recommendation)
-                    # print(recommendation_id)
-                    # print(recommendation)
-                    # print("-" * 100)
 
 
-# data = DataBase().delete_plan(2)
+# with open('t2.json', 'r') as file:
+#     data = json.load(file)
+    
+# data = DataBase().delete_plan(1)
 # print(data)
