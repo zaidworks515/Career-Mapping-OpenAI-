@@ -241,6 +241,31 @@ class DataBase():
             cursor.close()
             connection.close()
         
+    def delete_plan_by_branch(self, branch_id):
+        plans = self.get_plan_by_branch_id(branch_id)
+        if plans:
+            plan_ids = []
+            analysis_ids = []
+            for plan in plans:
+                analysis_id = self.get_skill_gap_ids_by_plan(plan)
+                for ana in analysis_id:
+                    analysis_ids.append(ana)
+                    
+                plan_ids.append(plan)
+                
+            for reid in analysis_ids:
+                self.dynamic_delete("skill_gap_analysis_resources", "skill_gap_analysis_id", reid)
+            
+            for plan in plan_ids:
+                self.dynamic_delete("skill_gap_analysis", "plan_id", plan)
+                self.dynamic_delete("training_activities", "plan_id", plan)
+                self.dynamic_delete("career_path_progression_map", "plan_id", plan)
+                self.dynamic_delete("action_plan_summary", "plan_id", plan)
+                self.dynamic_delete("next_steps_recommendations", "plan_id", plan)
+                self.dynamic_delete("career_goals_overview", "plan_id", plan)
+                
+            self.dynamic_delete("trainning_plan", "branch_id", branch_id)
+
     def delete_plan(self, path_id):
         branch_ids = self.get_branch_id_by_path_id(path_id)
         plan_ids = []
@@ -402,6 +427,7 @@ class DataBase():
             connection.close()
 
     def feed_data(self, data, branch_id):
+        self.delete_plan_by_branch(branch_id)
         additional_actions_to_support_career_growth = data.get("additional_actions_to_support_career_growth", None)
         career_goals_overview = data.get("career_goals_overview", None)
         skill_gap_analysis = data.get("skill_gap_analysis", None)
@@ -464,8 +490,7 @@ class DataBase():
                     recommendation_id = self.insert_next_steps_recommendations(plan_id, recommendation)
 
 
-# with open('t2.json', 'r') as file:
+# with open('training_steps.json', 'r') as file:
 #     data = json.load(file)
     
-# data = DataBase().delete_plan(1)
-# print(data)
+# DataBase().feed_data(data, 2)
