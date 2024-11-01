@@ -359,10 +359,10 @@ def send_plan_to_admin(branch_id, data):
     else:
         print("invalid branch")
     
-with open('training_steps.json', 'r') as file:
-    data = json.load(file)
+# with open('training_steps.json', 'r') as file:
+#     data = json.load(file)
     
-send_plan_to_admin(13, data)
+# send_plan_to_admin(13, data)
 
 # date = get_current_date()
 # print(date)
