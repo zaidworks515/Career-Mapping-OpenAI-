@@ -14,6 +14,7 @@ from database import DataBase
 import requests
 import time
 from datetime import datetime
+from create_pdf import send_plan_to_admin
 
 
 app = Flask(__name__)
@@ -712,7 +713,6 @@ def process_roadmap(id, model, token):
         logger.error(f"Error in process_roadmap for ID {id}: {str(e)}")
         path_status_pending(id)
         return f"Error in process_generate_roadmap for ID {id}: {str(e)}"
-               
 
 def process_regenerate_roadmap(id, model, token):
     try:
@@ -806,7 +806,7 @@ def process_training_steps(branch_id, input_content, model, max_retries):
                 response_formatted = extract_json_from_content(content)
                 
                 if response_formatted:
-                    db.feed_data(response_formatted, branch_id)
+                    send_plan_to_admin(branch_id, response_formatted)
                     file_path = 'training_steps.json'
                     with open(file_path, 'w') as json_file:
                         json.dump(response_formatted, json_file, indent=4)

@@ -183,116 +183,6 @@ class DataBase():
             for branch in branches:
                 self.handle_branch(branch, path_id, step_id)
 
-    def get_branch_id_by_path_id(self, path_id):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            select_query = "SELECT id FROM branch WHERE path_id = %s"
-            cursor.execute(select_query, (path_id,))
-            result = cursor.fetchall()
-            return [row[0] for row in result]
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
-        finally:
-            cursor.close()
-            connection.close()
-            
-    def get_plan_by_branch_id(self, path_id):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            select_query = "SELECT id FROM trainning_plan WHERE branch_id = %s"
-            cursor.execute(select_query, (path_id,))
-            result = cursor.fetchall()
-            return [row[0] for row in result]
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
-        finally:
-            cursor.close()
-            connection.close()
-                    
-    def dynamic_delete(self, table, column, id):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            delete_query = f"DELETE FROM {table} WHERE {column} = %s"
-            cursor.execute(delete_query, (id,))
-            connection.commit()
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-        finally:
-            cursor.close()
-            connection.close()
-            
-    def get_skill_gap_ids_by_plan(self, plan_id):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            select_query = "SELECT id FROM skill_gap_analysis WHERE plan_id = %s"
-            cursor.execute(select_query, (plan_id,))
-            result = cursor.fetchall()
-            return [row[0] for row in result]
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
-        finally:
-            cursor.close()
-            connection.close()
-        
-    def delete_plan_by_branch(self, branch_id):
-        plans = self.get_plan_by_branch_id(branch_id)
-        if plans:
-            plan_ids = []
-            analysis_ids = []
-            for plan in plans:
-                analysis_id = self.get_skill_gap_ids_by_plan(plan)
-                for ana in analysis_id:
-                    analysis_ids.append(ana)
-                    
-                plan_ids.append(plan)
-                
-            for reid in analysis_ids:
-                self.dynamic_delete("skill_gap_analysis_resources", "skill_gap_analysis_id", reid)
-            
-            for plan in plan_ids:
-                self.dynamic_delete("skill_gap_analysis", "plan_id", plan)
-                self.dynamic_delete("training_activities", "plan_id", plan)
-                self.dynamic_delete("career_path_progression_map", "plan_id", plan)
-                self.dynamic_delete("action_plan_summary", "plan_id", plan)
-                self.dynamic_delete("next_steps_recommendations", "plan_id", plan)
-                self.dynamic_delete("career_goals_overview", "plan_id", plan)
-                
-            self.dynamic_delete("trainning_plan", "branch_id", branch_id)
-
-    def delete_plan(self, path_id):
-        branch_ids = self.get_branch_id_by_path_id(path_id)
-        plan_ids = []
-        analysis_ids = []
-        for branch_id in branch_ids:
-            plans = self.get_plan_by_branch_id(branch_id)
-            for plan in plans:
-                analysis_id = self.get_skill_gap_ids_by_plan(plan)
-                for ana in analysis_id:
-                    analysis_ids.append(ana)
-                    
-                plan_ids.append(plan)
-                
-        for reid in analysis_ids:
-            self.dynamic_delete("skill_gap_analysis_resources", "skill_gap_analysis_id", reid)
-            
-        for plan in plan_ids:
-            self.dynamic_delete("skill_gap_analysis", "plan_id", plan)
-            self.dynamic_delete("training_activities", "plan_id", plan)
-            self.dynamic_delete("career_path_progression_map", "plan_id", plan)
-            self.dynamic_delete("action_plan_summary", "plan_id", plan)
-            self.dynamic_delete("next_steps_recommendations", "plan_id", plan)
-            self.dynamic_delete("career_goals_overview", "plan_id", plan)
-            
-        for branch_idds in branch_ids:
-            self.dynamic_delete("trainning_plan", "branch_id", branch_idds)
-
     def insert_road_map(self, data, path_id):
         self.delete_plan(path_id)
         self.delete_data_by_path_id(path_id)
@@ -304,193 +194,41 @@ class DataBase():
         else:
             print("invalid path id")
 
-    def insert_trainning_plan(self, plan_recommendation, branch_id):
+    def get_data_for_pdf(self, branch_id):
         connection = self.get_connection()
         cursor = connection.cursor()
         try:
-            insert_query = "INSERT INTO trainning_plan (plan_recommendation, branch_id) VALUES (%s,%s)"
-            cursor.execute(insert_query, (plan_recommendation, branch_id,))
-            connection.commit()
-            return cursor.lastrowid
+            query = """
+            SELECT u.username, u.email
+            FROM branch AS b
+            JOIN path AS p ON b.path_id = p.id
+            JOIN users AS u ON u.id = p.user_id
+            WHERE b.id = %s;
+            """
+            
+            cursor.execute(query, (branch_id,))
+            
+            result = cursor.fetchone()
+            if result:
+                data = {
+                    "username": result[0],
+                    "email": result[1]
+                }
+                return data
+            
+            else:
+                return None
+            
         except mysql.connector.Error as err:
             print(f"Error: {err}")
             return None
         finally:
             cursor.close()
             connection.close()
-
-    def insert_career_goals_overview(self, plan_id, title, type, completion_date):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            insert_query = "INSERT INTO career_goals_overview (plan_id, title, type, completion_date) VALUES (%s,%s,%s,%s)"
-            cursor.execute(insert_query, (plan_id, title, type, completion_date))
-            connection.commit()
-            return cursor.lastrowid
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
-        finally:
-            cursor.close()
-            connection.close()
-
-    def insert_skill_gap_analysis(self, plan_id, title, priority, status):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            insert_query = "INSERT INTO skill_gap_analysis (plan_id, title, priority, status) VALUES (%s,%s,%s,%s)"
-            cursor.execute(insert_query, (plan_id, title, priority, status))
-            connection.commit()
-            return cursor.lastrowid
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
-        finally:
-            cursor.close()
-            connection.close()
-
-    def insert_skill_gap_analysis_resources(self, skill_gap_analysis_id, title, platform, link):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            insert_query = "INSERT INTO skill_gap_analysis_resources (skill_gap_analysis_id, title, platform, link) VALUES (%s,%s,%s,%s)"
-            cursor.execute(insert_query, (skill_gap_analysis_id, title, platform, link))
-            connection.commit()
-            return cursor.lastrowid
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
-        finally:
-            cursor.close()
-            connection.close()
-
-    def insert_training_activities(self, plan_id, title, expected_outcomes, progress_measurement, duration, date,
-                                   responsible):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            insert_query = "INSERT INTO training_activities (plan_id, title, expected_outcomes, progress_measurement, duration, date, responsible) VALUES (%s,%s,%s,%s,%s,%s,%s)"
-            cursor.execute(insert_query,
-                           (plan_id, title, expected_outcomes, progress_measurement, duration, date, responsible))
-            connection.commit()
-            return cursor.lastrowid
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
-        finally:
-            cursor.close()
-            connection.close()
-
-    def insert_career_path_progression_map(self, plan_id, role, suggested_timing):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            insert_query = "INSERT INTO career_path_progression_map (plan_id, role, suggested_timing) VALUES (%s,%s,%s)"
-            cursor.execute(insert_query, (plan_id, role, suggested_timing))
-            connection.commit()
-            return cursor.lastrowid
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
-        finally:
-            cursor.close()
-            connection.close()
-
-    def insert_action_plan_summary(self, plan_id, action, responsiblity):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            insert_query = "INSERT INTO action_plan_summary (plan_id, action, responsiblity) VALUES (%s,%s,%s)"
-            cursor.execute(insert_query, (plan_id, action, responsiblity))
-            connection.commit()
-            return cursor.lastrowid
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
-        finally:
-            cursor.close()
-            connection.close()
-
-    def insert_next_steps_recommendations(self, plan_id, recommendations):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            insert_query = "INSERT INTO next_steps_recommendations (plan_id, recommendations) VALUES (%s,%s)"
-            cursor.execute(insert_query, (plan_id, recommendations))
-            connection.commit()
-            return cursor.lastrowid
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
-        finally:
-            cursor.close()
-            connection.close()
-
-    def feed_data(self, data, branch_id):
-        self.delete_plan_by_branch(branch_id)
-        additional_actions_to_support_career_growth = data.get("additional_actions_to_support_career_growth", None)
-        career_goals_overview = data.get("career_goals_overview", None)
-        skill_gap_analysis = data.get("skill_gap_analysis", None)
-        training_activities = data.get("training_activities", None)
-        career_path_progression_map = data.get("career_path_progression_map", None)
-        action_plan_summary = data.get("action_plan_summary", None)
-        next_steps_recommendations = data.get("next_steps_recommendations", None)
-
-        if additional_actions_to_support_career_growth:
-            plan_id = self.insert_trainning_plan(additional_actions_to_support_career_growth, branch_id)
-
-            if career_goals_overview:
-                for goal in career_goals_overview:
-                    title = goal.get("title", "")
-                    type = goal.get("type", "")
-                    completion_date = goal.get("completion_date", "")
-                    career_goals_overview_id = self.insert_career_goals_overview(plan_id, title, type, completion_date)
-
-            if skill_gap_analysis:
-                for skill in skill_gap_analysis:
-                    title = skill.get("title", "")
-                    priority = skill.get("priority", "")
-                    status = skill.get("status", "")
-                    resources = skill.get("resources", "")
-                    skill_gap_analysis_id = self.insert_skill_gap_analysis(plan_id, title, priority, status)
-
-                    if resources:
-                        for resource in resources:
-                            platform = resource.get("platform", "")
-                            resource_title = resource.get("resource_title", "")
-                            link = resource.get("link", "")
-                            resource_id = self.insert_skill_gap_analysis_resources(skill_gap_analysis_id, title, platform, link)
-
-            if training_activities:
-                for training in training_activities:
-                    title = training.get("title", "")
-                    expected_outcomes = training.get("expected_outcomes", "")
-                    progress_measurement = training.get("progress_measurement", "")
-                    duration = training.get("duration", "")
-                    date = training.get("date", "")
-                    responsible = training.get("responsible", "")
-                    training_activitiy_id = self.insert_training_activities(plan_id, title, expected_outcomes,
-                                                                            progress_measurement, duration, date,
-                                                                            responsible)
-
-            if career_path_progression_map:
-                for map in career_path_progression_map:
-                    role = map.get("role", "")
-                    suggested_timing = map.get("suggested_timing", "")
-                    career_path_progression_map_id = self.insert_career_path_progression_map(plan_id, role, suggested_timing)
-
-            if action_plan_summary:
-                for summary in action_plan_summary:
-                    action = summary.get("action", "")
-                    responsibility = summary.get("responsibility", "")
-                    summary_id = self.insert_action_plan_summary(plan_id, action, responsibility)
-
-            if next_steps_recommendations:
-                for recommendation in next_steps_recommendations:
-                    recommendation_id = self.insert_next_steps_recommendations(plan_id, recommendation)
 
 
 # with open('training_steps.json', 'r') as file:
 #     data = json.load(file)
     
-# DataBase().feed_data(data, 2)
+# data = DataBase().get_data_for_pdf(2)
+# print(data)
