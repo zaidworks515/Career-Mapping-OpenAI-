@@ -184,7 +184,6 @@ class DataBase():
                 self.handle_branch(branch, path_id, step_id)
 
     def insert_road_map(self, data, path_id):
-        self.delete_plan(path_id)
         self.delete_data_by_path_id(path_id)
         path = self.check_path_exists(path_id)
         if path:
