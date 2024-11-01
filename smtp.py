@@ -2,14 +2,14 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
+from config import smtp_host, smtp_port, smtp_email, smtp_password, admin_email
 
 def send_email(username, pdf_file_path):
-    HOST = "smtp.gmail.com"
-    PORT = 587
-    FROM_EMAIL = "razorshariq@gmail.com"
-    TO_EMAIL = "hr1938082@gmail.com"
-    # TO_EMAIL = "anaskhankin1999@gmail.com"
-    PASSWORD = "xhkjchgrxezlsnvz"
+    HOST = smtp_host
+    PORT = smtp_port
+    FROM_EMAIL = smtp_email
+    TO_EMAIL = admin_email
+    PASSWORD = smtp_password
 
     subject = f"Generated Career Plan from {username}"
     body = f"""

@@ -13,4 +13,11 @@ user = os.getenv('USER')
 password = os.getenv('PASSWORD')
 database = os.getenv('DATABASE')
 
+smtp_host = os.getenv("SMTP_HOST")
+smtp_port = os.getenv("SMTP_PORT")
+smtp_email = os.getenv("SMTP_EMAIL")
+smtp_password = os.getenv("SMTP_PASSWORD")
+admin_email = os.getenv("ADMIN_EMAIL")
+
+
 
