@@ -10,99 +10,99 @@ import os
 db = DataBase()
 
 style = """
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Career Development Plan</title>
-    <style>
-        @page {
-            size: A4;
-            margin: 10mm;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Career Development Plan</title>
+        <style>
+            @page {
+                size: A4;
+                margin: 10mm;
+            }
 
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-        }
+            body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 0;
+            }
 
-        .main-title {
-            font-size: 28px;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 20px;
-        }
+            .main-title {
+                font-size: 28px;
+                font-weight: bold;
+                text-align: center;
+                margin-top: 20px;
+            }
 
-        .section-title {
-            font-size: 20px;
-            font-weight: bold;
-            width: 100%;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
+            .section-title {
+                font-size: 20px;
+                font-weight: bold;
+                width: 100%;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
 
-        .info {
-            font-size: 14px;
-            margin-top: 10px;
-            width: 100%;
-            text-align: left;
-            padding-left: 20px;
-        }
+            .info {
+                font-size: 14px;
+                margin-top: 10px;
+                width: 100%;
+                text-align: left;
+                padding-left: 20px;
+            }
 
-        .info-item {
-            margin: 0;
-        }
+            .info-item {
+                margin: 0;
+            }
 
-        .info-ol {
-            padding-left: 20px;
-        }
+            .info-ol {
+                padding-left: 20px;
+            }
 
-        .info-item-li {
-            font-size: 14px;
-            padding-left: 20px;
-        }
+            .info-item-li {
+                font-size: 14px;
+                padding-left: 20px;
+            }
 
-        .info-ul {
-            list-style-type: none;
-            padding-left: 20px;
-        }
+            .info-ul {
+                list-style-type: none;
+                padding-left: 20px;
+            }
 
-        .sub-info-ul {
-            padding-left: 40px;
-            font-size: 14px;
-        }
+            .sub-info-ul {
+                padding-left: 40px;
+                font-size: 14px;
+            }
 
-        .sub-info-li {
-            padding-left: 40px;
-        }
+            .sub-info-li {
+                padding-left: 40px;
+            }
 
-        a {
-            color: blue;
-            text-decoration: none;
-        }
+            a {
+                color: blue;
+                text-decoration: none;
+            }
 
-        a:hover {
-            text-decoration: underline;
-        }
-        
-        .resource-ul {
-            list-style-type: none;
-        }
-        
-        .signature-container {
-            margin-top: 50px;
+            a:hover {
+                text-decoration: underline;
+            }
             
-        }
+            .resource-ul {
+                list-style-type: none;
+            }
+            
+            .signature-container {
+                margin-top: 50px;
+                
+            }
 
-        .signature {
-            font-size: 14px;
-        }
+            .signature {
+                font-size: 14px;
+            }
 
 
-    </style>
-</head>
+        </style>
+    </head>
 """
 
 def create_pdf(username, email, creation_date, html_data):
@@ -180,6 +180,14 @@ def get_current_date():
     formatted_date = current_date.strftime("%m/%d/%Y")
     return formatted_date
 
+def get_full_type(value):
+    if value == "l":
+        return "Long Term"
+    elif value == "s":
+        return "Short Term"
+    else:
+        return None
+
 def process_plan(username, email, date, data):
     additional_actions_to_support_career_growth = data.get("additional_actions_to_support_career_growth", None)
     career_goals_overview = data.get("career_goals_overview", None)
@@ -199,11 +207,12 @@ def process_plan(username, email, date, data):
             for goal in career_goals_overview:
                 title = goal.get("title", "")
                 type = goal.get("type", "")
+                full_type = get_full_type(type)
                 completion_date = goal.get("completion_date", "")
                 html = f"""
                     <div class="info">
                         <div class="info-item"><strong>Title:</strong> {title}</div>
-                        <div class="info-item"><strong>Type:</strong> {type}</div>
+                        <div class="info-item"><strong>Type:</strong> {full_type}</div>
                         <div class="info-item"><strong>Completion Date:</strong> {completion_date}</div>
                     </div>
                     <br/>
