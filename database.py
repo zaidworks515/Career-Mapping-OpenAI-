@@ -1,6 +1,8 @@
 import mysql.connector
 from config import host, user, password, database
 import json
+from datetime import datetime
+
 
 class DataBase():
     def get_connection(self):
@@ -198,7 +200,7 @@ class DataBase():
         cursor = connection.cursor()
         try:
             query = """
-            SELECT u.username, u.email
+            SELECT u.username, u.email, u.id
             FROM branch AS b
             JOIN path AS p ON b.path_id = p.id
             JOIN users AS u ON u.id = p.user_id
@@ -211,7 +213,8 @@ class DataBase():
             if result:
                 data = {
                     "username": result[0],
-                    "email": result[1]
+                    "email": result[1],
+                    "user_id": result[2]
                 }
                 return data
             
@@ -224,10 +227,44 @@ class DataBase():
         finally:
             cursor.close()
             connection.close()
+            
+    def add_plans_count_in_subscription(self, user_id):
+        try:
+            connection = self.get_connection()
+            cursor = connection.cursor(buffered=True)
+            query = """
+                UPDATE user_subscription
+                SET current_training_plan = 
+                    CASE 
+                        WHEN current_training_plan IS NULL THEN 1
+                        ELSE current_training_plan + 1
+                    END
+                WHERE user_id = %s
+                AND expiry_date > %s
+                LIMIT 1
+            """
+            val = (user_id, datetime.now())
+
+            cursor.execute(query, val)
+            connection.commit()
+            rows_affected = cursor.rowcount
+            print(f"Training plan updated successfully updated in subsctiption: {rows_affected}")
+            return rows_affected
+
+        except Error as err:
+            print(f"Error: {err}")
+            return None
+
+        finally:
+            if cursor:
+                cursor.close()
+            if connection:
+                connection.close()
+        
 
 
 # with open('training_steps.json', 'r') as file:
 #     data = json.load(file)
     
-# data = DataBase().get_data_for_pdf(2)
+# data = DataBase().add_plans_count_in_subscription(30)
 # print(data)

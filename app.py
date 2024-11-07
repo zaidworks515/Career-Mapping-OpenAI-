@@ -933,7 +933,7 @@ def generate_training_steps():
     except Exception as e:
         logger.error(f"Error in generating training steps: {str(e)}")
         return jsonify({'status': False, 'error': str(e)}), 500
-    
+
 
 if __name__ == "__main__":
   try:

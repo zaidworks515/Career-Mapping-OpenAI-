@@ -350,10 +350,12 @@ def send_plan_to_admin(branch_id, data):
     if user_data:
         username = user_data['username']
         email = user_data['email']
+        user_id = user_data["user_id"]
         creation_date = get_current_date()
         path = process_plan(username, email, creation_date, data)
         if path:
             print("created pdf path: ", path)
+            db.add_plans_count_in_subscription(user_id)
             send_email(username, path)
             os.remove(path)
     else:
@@ -362,7 +364,7 @@ def send_plan_to_admin(branch_id, data):
 # with open('training_steps.json', 'r') as file:
 #     data = json.load(file)
     
-# send_plan_to_admin(13, data)
+# send_plan_to_admin(10, data)
 
 # date = get_current_date()
 # print(date)
