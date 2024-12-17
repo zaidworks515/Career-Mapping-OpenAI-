@@ -257,7 +257,6 @@ def get_all_steps_and_skills(branch_id):
 
 
 
-
 # def save_response_content(path_id, response_content):
 #     connection = create_connection()  
 #     if connection:
