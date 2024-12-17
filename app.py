@@ -10,10 +10,11 @@ from concurrent.futures import ThreadPoolExecutor
 import logging
 from db_queries import check_prompt_file_db, path_status_analyzed, path_status_analyzing, path_status_pending, get_all_steps_and_skills
 from config import cv_path, port, openapi_key, key, node_server_url
-from test import DataBase
+from database import DataBase
 import requests
 import time
 from datetime import datetime
+from create_pdf import send_plan_to_admin
 
 
 app = Flask(__name__)
@@ -816,7 +817,7 @@ def process_regenerate_roadmap(id, model, token):
         return f"Error in process_regenerate_roadmap for ID {id}: {str(e)}"
     
     
-def process_training_steps(input_content, model, max_retries):
+def process_training_steps(branch_id, input_content, model, max_retries):
     attempts = 0
     while attempts <= max_retries:
         try:
@@ -829,6 +830,7 @@ def process_training_steps(input_content, model, max_retries):
                 response_formatted = extract_json_from_content(content)
                 
                 if response_formatted:
+                    send_plan_to_admin(branch_id, response_formatted)
                     file_path = 'training_steps.json'
                     with open(file_path, 'w') as json_file:
                         json.dump(response_formatted, json_file, indent=4)
@@ -947,7 +949,7 @@ def generate_training_steps():
         model = "gpt-4o"
         max_retries = 3
 
-        executor.submit(process_training_steps, input_content, model, max_retries)
+        executor.submit(process_training_steps, branch_id, input_content, model, max_retries)
 
         return jsonify({'status': True, 'message': 'Training steps generation has started'})
 
