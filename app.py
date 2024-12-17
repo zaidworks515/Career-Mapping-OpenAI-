@@ -10,11 +10,10 @@ from concurrent.futures import ThreadPoolExecutor
 import logging
 from db_queries import check_prompt_file_db, path_status_analyzed, path_status_analyzing, path_status_pending, get_all_steps_and_skills
 from config import cv_path, port, openapi_key, key, node_server_url
-from database import DataBase
+from test import DataBase
 import requests
 import time
 from datetime import datetime
-from create_pdf import send_plan_to_admin
 
 
 app = Flask(__name__)
@@ -30,6 +29,25 @@ executor = ThreadPoolExecutor(max_workers=15)
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.DEBUG)
+
+
+def update_title(obj):
+    """
+    Recursively updates the title field in the JSON object by splitting on ':'
+    and taking the last part.
+    """
+    if isinstance(obj, dict):
+        updated_obj = {}
+        for key, value in obj.items():
+            if key == "title" and isinstance(value, str):
+                updated_obj[key] = value.split(":")[-1].strip()
+            else:
+                updated_obj[key] = update_title(value)
+        return updated_obj
+    elif isinstance(obj, list):
+        return [update_title(item) for item in obj]
+    return obj
+
 
 
 def single_prompt(prompt, model, temperature=0.6):
@@ -672,6 +690,8 @@ def process_roadmap(id, model, token):
 
                 if response_formatted:
                     try:
+                        response_formatted = update_title(response_formatted)
+
                         file_path = 'response.json'
                         with open(file_path, 'w') as json_file:
                             json.dump(response_formatted, json_file, indent=4)
@@ -713,6 +733,7 @@ def process_roadmap(id, model, token):
         logger.error(f"Error in process_roadmap for ID {id}: {str(e)}")
         path_status_pending(id)
         return f"Error in process_generate_roadmap for ID {id}: {str(e)}"
+               
 
 def process_regenerate_roadmap(id, model, token):
     try:
@@ -766,6 +787,8 @@ def process_regenerate_roadmap(id, model, token):
 
         if response_formatted:
             try:
+                response_formatted = update_title(response_formatted)
+
                 file_path = 'response.json'
                 with open(file_path, 'w') as json_file:
                     json.dump(response_formatted, json_file, indent=4)
@@ -793,7 +816,7 @@ def process_regenerate_roadmap(id, model, token):
         return f"Error in process_regenerate_roadmap for ID {id}: {str(e)}"
     
     
-def process_training_steps(branch_id, input_content, model, max_retries):
+def process_training_steps(input_content, model, max_retries):
     attempts = 0
     while attempts <= max_retries:
         try:
@@ -806,7 +829,6 @@ def process_training_steps(branch_id, input_content, model, max_retries):
                 response_formatted = extract_json_from_content(content)
                 
                 if response_formatted:
-                    send_plan_to_admin(branch_id, response_formatted)
                     file_path = 'training_steps.json'
                     with open(file_path, 'w') as json_file:
                         json.dump(response_formatted, json_file, indent=4)
@@ -908,7 +930,6 @@ def generate_training_steps():
         if not branch_id:
             return jsonify({'error': 'ID is required'}), 400
 
-
         # response_content = get_response_content(path_id=id)
 
         # file_path = 'response_content.txt'
@@ -926,14 +947,14 @@ def generate_training_steps():
         model = "gpt-4o"
         max_retries = 3
 
-        executor.submit(process_training_steps, branch_id, input_content, model, max_retries)
+        executor.submit(process_training_steps, input_content, model, max_retries)
 
         return jsonify({'status': True, 'message': 'Training steps generation has started'})
 
     except Exception as e:
         logger.error(f"Error in generating training steps: {str(e)}")
         return jsonify({'status': False, 'error': str(e)}), 500
-
+    
 
 if __name__ == "__main__":
   try:
