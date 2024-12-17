@@ -32,6 +32,25 @@ logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.DEBUG)
 
 
+def update_title(obj):
+    """
+    Recursively updates the title field in the JSON object by splitting on ':'
+    and taking the last part.
+    """
+    if isinstance(obj, dict):
+        updated_obj = {}
+        for key, value in obj.items():
+            if key == "title" and isinstance(value, str):
+                updated_obj[key] = value.split(":")[-1].strip()
+            else:
+                updated_obj[key] = update_title(value)
+        return updated_obj
+    elif isinstance(obj, list):
+        return [update_title(item) for item in obj]
+    return obj
+
+
+
 def single_prompt(prompt, model, temperature=0.6):
     system_instructions = (
                 "You are an experienced career advisor with a deep understanding of career development paths. "
@@ -672,6 +691,8 @@ def process_roadmap(id, model, token):
 
                 if response_formatted:
                     try:
+                        response_formatted = update_title(response_formatted)
+
                         file_path = 'response.json'
                         with open(file_path, 'w') as json_file:
                             json.dump(response_formatted, json_file, indent=4)
@@ -713,6 +734,7 @@ def process_roadmap(id, model, token):
         logger.error(f"Error in process_roadmap for ID {id}: {str(e)}")
         path_status_pending(id)
         return f"Error in process_generate_roadmap for ID {id}: {str(e)}"
+               
 
 def process_regenerate_roadmap(id, model, token):
     try:
@@ -766,6 +788,8 @@ def process_regenerate_roadmap(id, model, token):
 
         if response_formatted:
             try:
+                response_formatted = update_title(response_formatted)
+
                 file_path = 'response.json'
                 with open(file_path, 'w') as json_file:
                     json.dump(response_formatted, json_file, indent=4)
@@ -908,7 +932,6 @@ def generate_training_steps():
         if not branch_id:
             return jsonify({'error': 'ID is required'}), 400
 
-
         # response_content = get_response_content(path_id=id)
 
         # file_path = 'response_content.txt'
@@ -933,7 +956,7 @@ def generate_training_steps():
     except Exception as e:
         logger.error(f"Error in generating training steps: {str(e)}")
         return jsonify({'status': False, 'error': str(e)}), 500
-
+    
 
 if __name__ == "__main__":
   try:

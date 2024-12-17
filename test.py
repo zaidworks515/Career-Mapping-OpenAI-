@@ -1,7 +1,6 @@
+import json
 import mysql.connector
 from config import host, user, password, database
-import json
-from datetime import datetime
 
 
 class DataBase():
@@ -21,51 +20,51 @@ class DataBase():
         else:
             query = "INSERT INTO branch(id, color, path_id) VALUES(NULL, %s, %s)"
             val = (color, path_id)
-
+        
         connection = self.get_connection()
         cursor = connection.cursor(buffered=True)
         cursor.execute(query, val)
         connection.commit()
         inserted_id = cursor.lastrowid
-
+        
         cursor.close()
         connection.close()
-
+        
         print("Record inserted successfully. Inserted ID:", inserted_id)
         return inserted_id
-
+    
     def insert_step(self, title, description, branch_id, sort, path_id):
         query = "INSERT INTO steps(id, title, description, sort, path_id, branch_id) VALUES(NULL, %s, %s, %s, %s, %s)"
         val = (title, description, sort, path_id, branch_id)
-
+        
         connection = self.get_connection()
         cursor = connection.cursor(buffered=True)
         cursor.execute(query, val)
         connection.commit()
         inserted_id = cursor.lastrowid
-
+        
         cursor.close()
         connection.close()
-
+        
         print("Step inserted successfully. Inserted ID:", inserted_id)
         return inserted_id
-
+    
     def insert_skill(self, title, sort, step_id):
         query = "INSERT INTO skills(id, title, sort, step_id) VALUES(NULL, %s, %s, %s)"
         val = (title, sort, step_id)
-
+        
         connection = self.get_connection()
         cursor = connection.cursor(buffered=True)
         cursor.execute(query, val)
         connection.commit()
         inserted_id = cursor.lastrowid
-
+        
         cursor.close()
         connection.close()
-
+        
         print("Step inserted successfully. Inserted ID:", inserted_id)
         return inserted_id
-
+    
     def check_path_exists(self, path_id):
         connection = self.get_connection()
         cursor = connection.cursor(buffered=True)
@@ -87,7 +86,7 @@ class DataBase():
         finally:
             cursor.close()
             connection.close()
-
+    
     def delete_data_by_path_id(self, path_id):
         connection = self.get_connection()
         cursor = connection.cursor(buffered=True)
@@ -138,7 +137,7 @@ class DataBase():
             cursor.execute(query_delete_steps, (path_id,))
             steps_deleted = cursor.rowcount
             print(f"Deleted {steps_deleted} steps with path_id {path_id}")
-
+            
             query_delete_branches = """
                 DELETE b FROM branch b
                 WHERE b.step_id IN (SELECT s.id FROM steps s WHERE s.path_id = %s)
@@ -146,7 +145,7 @@ class DataBase():
             cursor.execute(query_delete_branches, (path_id,))
             branches_deleted = cursor.rowcount
             print(f"Deleted {branches_deleted} branches associated with steps having path_id {path_id}")
-
+            
             connection.commit()
 
         except mysql.connector.Error as err:
@@ -156,14 +155,14 @@ class DataBase():
         finally:
             cursor.close()
             connection.close()
-
+    
     def handle_branch(self, branch, path_id, step_id=None):
         color = branch.get('color', '')
         steps = branch.get('steps', [])
         branch_id = self.insert_branch(color, path_id, step_id)
         print(f"Branch ID: {branch_id}, Color: {color}")
         self.handle_steps(steps, branch_id, path_id)
-
+        
     def handle_steps(self, steps, branch_id, path_id):
         for index, step in enumerate(steps):
             sort = index + 1
@@ -183,8 +182,8 @@ class DataBase():
 
             branches = step.get('branches', [])
             for branch in branches:
-                self.handle_branch(branch, path_id, step_id)
-
+                self.handle_branch(branch,path_id, step_id)
+    
     def insert_road_map(self, data, path_id):
         self.delete_data_by_path_id(path_id)
         path = self.check_path_exists(path_id)
@@ -194,77 +193,16 @@ class DataBase():
             print("roadmap data successfully inserted")
         else:
             print("invalid path id")
-
-    def get_data_for_pdf(self, branch_id):
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            query = """
-            SELECT u.username, u.email, u.id
-            FROM branch AS b
-            JOIN path AS p ON b.path_id = p.id
-            JOIN users AS u ON u.id = p.user_id
-            WHERE b.id = %s;
-            """
             
-            cursor.execute(query, (branch_id,))
-            
-            result = cursor.fetchone()
-            if result:
-                data = {
-                    "username": result[0],
-                    "email": result[1],
-                    "user_id": result[2]
-                }
-                return data
-            
-            else:
-                return None
-            
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
-        finally:
-            cursor.close()
-            connection.close()
-            
-    def add_plans_count_in_subscription(self, user_id):
-        try:
-            connection = self.get_connection()
-            cursor = connection.cursor(buffered=True)
-            query = """
-                UPDATE user_subscription
-                SET current_training_plan = 
-                    CASE 
-                        WHEN current_training_plan IS NULL THEN 1
-                        ELSE current_training_plan + 1
-                    END
-                WHERE user_id = %s
-                AND expiry_date > %s
-                LIMIT 1
-            """
-            val = (user_id, datetime.now())
-
-            cursor.execute(query, val)
-            connection.commit()
-            rows_affected = cursor.rowcount
-            print(f"Training plan updated successfully updated in subsctiption: {rows_affected}")
-            return rows_affected
-
-        except Exception as err:
-            print(f"Error: {err}")
-            return None
-
-        finally:
-            if cursor:
-                cursor.close()
-            if connection:
-                connection.close()
+        
+    
         
 
+        
+    
+# db = DataBase()
 
-# with open('training_steps.json', 'r') as file:
+# with open('response.json', 'r') as file:
 #     data = json.load(file)
     
-# data = DataBase().add_plans_count_in_subscription(30)
-# print(data)
+# db.insert_road_map(data, 3)

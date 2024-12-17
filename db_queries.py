@@ -20,7 +20,6 @@ def create_connection():
         return None
     
     
-    
 def check_prompt_file_db(id):
     connection = create_connection()
     if connection:
