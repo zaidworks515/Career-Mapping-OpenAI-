@@ -848,7 +848,7 @@ def process_training_steps(branch_id, input_content, model, max_retries):
     
     
     
-@app.route('/generate_roadmap', methods=['POST'])
+@app.route('/ai/generate_roadmap', methods=['POST'])
 def generate_roadmap():
     try:
       auth_header = request.headers.get('Authorization')
@@ -881,7 +881,7 @@ def generate_roadmap():
       return jsonify({'status': False}), 500
     
     
-@app.route('/regenerate_roadmap', methods=['POST'])
+@app.route('/ai/regenerate_roadmap', methods=['POST'])
 def regenerate_roadmap():
     try:
       auth_header = request.headers.get('Authorization')
@@ -913,7 +913,7 @@ def regenerate_roadmap():
       logger.error(f"Error in regenerate_roadmap: {str(e)}")
       return jsonify({'status': False}), 500
 
-@app.route('/generate_training_steps', methods=['POST'])
+@app.route('/ai/generate_training_steps', methods=['POST'])
 def generate_training_steps():
     try:
         auth_header = request.headers.get('Authorization')
