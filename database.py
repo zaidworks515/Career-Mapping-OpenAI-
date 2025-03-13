@@ -234,16 +234,19 @@ class DataBase():
             cursor = connection.cursor(buffered=True)
             query = """
                 UPDATE user_subscription
-                SET current_training_plan = 
-                    CASE 
-                        WHEN current_training_plan IS NULL THEN 1
-                        ELSE current_training_plan + 1
-                    END
-                WHERE user_id = %s
-                AND expiry_date > %s
-                LIMIT 1
+                    SET current_training_plan = 
+                CASE 
+                    WHEN current_training_plan IS NULL THEN 1
+                    ELSE current_training_plan + 1
+                END
+                    WHERE id = (
+                    SELECT id FROM user_subscription
+                    WHERE user_id = %s
+                    ORDER BY created_at DESC
+                    LIMIT 1
+                )
             """
-            val = (user_id, datetime.now())
+            val = (user_id,)
 
             cursor.execute(query, val)
             connection.commit()
@@ -266,5 +269,5 @@ class DataBase():
 # with open('training_steps.json', 'r') as file:
 #     data = json.load(file)
     
-# data = DataBase().add_plans_count_in_subscription(30)
-# print(data)
+data = DataBase().add_plans_count_in_subscription(29)
+print(data)
