@@ -269,5 +269,5 @@ class DataBase():
 # with open('training_steps.json', 'r') as file:
 #     data = json.load(file)
     
-data = DataBase().add_plans_count_in_subscription(29)
-print(data)
+# data = DataBase().add_plans_count_in_subscription(29)
+# print(data)
