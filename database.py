@@ -228,30 +228,67 @@ class DataBase():
             cursor.close()
             connection.close()
             
+    # def add_plans_count_in_subscription(self, user_id):
+    #     try:
+    #         connection = self.get_connection()
+    #         cursor = connection.cursor(buffered=True)
+    #         query = """
+    #             UPDATE user_subscription
+    #                 SET current_training_plan = 
+    #             CASE 
+    #                 WHEN current_training_plan IS NULL THEN 1
+    #                 ELSE current_training_plan + 1
+    #             END
+    #                 WHERE id = (
+    #                 SELECT id FROM user_subscription
+    #                 WHERE user_id = %s
+    #                 ORDER BY created_at DESC
+    #                 LIMIT 1
+    #             )
+    #         """
+    #         val = (user_id,)
+
+    #         cursor.execute(query, val)
+    #         connection.commit()
+    #         rows_affected = cursor.rowcount
+    #         print(f"Training plan updated successfully updated in subsctiption: {rows_affected}")
+    #         return rows_affected
+
+    #     except Exception as err:
+    #         print(f"Error: {err}")
+    #         return None
+
+    #     finally:
+    #         if cursor:
+    #             cursor.close()
+    #         if connection:
+    #             connection.close()
+        
     def add_plans_count_in_subscription(self, user_id):
         try:
             connection = self.get_connection()
             cursor = connection.cursor(buffered=True)
+
             query = """
-                UPDATE user_subscription
-                    SET current_training_plan = 
-                CASE 
-                    WHEN current_training_plan IS NULL THEN 1
-                    ELSE current_training_plan + 1
-                END
-                    WHERE id = (
+                UPDATE user_subscription us
+                INNER JOIN (
                     SELECT id FROM user_subscription
                     WHERE user_id = %s
                     ORDER BY created_at DESC
                     LIMIT 1
-                )
+                ) sub ON us.id = sub.id
+                SET us.current_training_plan = 
+                    CASE 
+                        WHEN us.current_training_plan IS NULL THEN 1
+                        ELSE us.current_training_plan + 1
+                    END
             """
             val = (user_id,)
 
             cursor.execute(query, val)
             connection.commit()
             rows_affected = cursor.rowcount
-            print(f"Training plan updated successfully updated in subsctiption: {rows_affected}")
+            print(f"Training plan updated successfully in subscription: {rows_affected}")
             return rows_affected
 
         except Exception as err:
@@ -263,11 +300,12 @@ class DataBase():
                 cursor.close()
             if connection:
                 connection.close()
-        
+
+
 
 
 # with open('training_steps.json', 'r') as file:
 #     data = json.load(file)
     
-# data = DataBase().add_plans_count_in_subscription(29)
+# data = DataBase().add_plans_count_in_subscription(45)
 # print(data)
