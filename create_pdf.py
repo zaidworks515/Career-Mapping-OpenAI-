@@ -355,7 +355,7 @@ def send_plan_to_admin(branch_id, data):
         path = process_plan(username, email, creation_date, data)
         if path:
             print("created pdf path: ", path)
-            db.add_plans_count_in_subscription(user_id)
+            # db.add_plans_count_in_subscription(user_id)
             send_email(username, path)
             os.remove(path)
     else:

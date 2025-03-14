@@ -819,6 +819,12 @@ def process_regenerate_roadmap(id, model, token):
     
 def process_training_steps(branch_id, input_content, model, max_retries):
     attempts = 0
+    user_data = db.get_data_for_pdf(branch_id)
+    
+    if user_data['user_id']:
+      user_id = user_data["user_id"]
+      db.add_plans_count_in_subscription(user_id)
+      
     while attempts <= max_retries:
         try:
             current_date = datetime.now()
@@ -844,8 +850,8 @@ def process_training_steps(branch_id, input_content, model, max_retries):
             attempts += 1
             if attempts > max_retries:
                 logger.error("Failed to generate valid response after multiple attempts.")
+            db.subtract_plans_count_in_subscription(user_data['user_id'])
             time.sleep(2)    
-    
     
     
 @app.route('/ai/generate_roadmap', methods=['POST'])
@@ -913,6 +919,7 @@ def regenerate_roadmap():
       logger.error(f"Error in regenerate_roadmap: {str(e)}")
       return jsonify({'status': False}), 500
 
+
 @app.route('/ai/generate_training_steps', methods=['POST'])
 def generate_training_steps():
     try:
@@ -948,7 +955,7 @@ def generate_training_steps():
 
         model = "gpt-4o"
         max_retries = 3
-
+        
         executor.submit(process_training_steps, branch_id, input_content, model, max_retries)
 
         return jsonify({'status': True, 'message': 'Training steps generation has started'})
